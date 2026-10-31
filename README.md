@@ -1,10 +1,10 @@
-# Jordan Medicines Atlas v0.2.0 — GitHub Pages edition
+# دليل — Dalil v0.3.0 — GitHub Pages edition
 
 An independent medicine catalogue with 10,628 JFDA source product rows. This package is a complete static website. No server, build, package installation, database account or ChatGPT sign-in is required by the application.
 
 ## Publish on GitHub Pages
 
-1. Extract this ZIP on your computer. Upload the extracted files and the docs folder to a new GitHub repository. The repository can be named `jordan-drugs`, or another name you choose.
+1. Extract this ZIP on your computer. Upload the extracted files and the docs folder to a new GitHub repository. The repository can be named `dalil`, or another name you choose.
 2. Confirm `index.html`, `app.js`, `styles.css`, `catalogue.json`, `sw.js`, the manifest and icons are directly at the repository root. Do not upload the ZIP itself or place these files inside an extra wrapper folder.
 3. Open repository Settings → Pages. Under Build and deployment, select Deploy from a branch, choose the main branch and /(root), then Save.
 4. Wait for the Pages deployment to succeed. Use the exact published address GitHub displays in Settings → Pages. Open that address, rather than an individual file on github.com.
@@ -57,3 +57,11 @@ Replace changed website files in the same repository. Keep all referenced assets
 
 GitHub's publishing-source instructions:
 https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+
+## v0.3 update
+
+The app name, browser title, home-screen name and icons are now دليل. New visits default to Arabic, with English available from the top control; existing language preferences are kept. Catalogue records are unchanged. A visible loading/error panel with a Retry button replaces silent data-load failure, and requests time out after 20 seconds. Application asset URLs and the offline cache are versioned to help browsers obtain the new interface. Existing saved items and preferences retain their original local-storage keys.
+
+The live site https://izzatahmed.github.io/dalil/ was checked on 31 October 2026: all 10,628 records loaded and Jardiance returned the 10 mg and 25 mg records. The reported blank page was not reproduced; its cause is unconfirmed. The new files must be uploaded before the live site shows the new branding.
+
+If a browser still shows a blank or old page after the deployment succeeds, first reopen the published website (not the GitHub repository). On desktop, try Ctrl+Shift+R. A private browsing window can help distinguish a cached copy from a failed deployment without removing saved medicines or preferences.

@@ -19,3 +19,6 @@ html{scroll-padding-top:14px}dialog{overscroll-behavior:contain}.close{min-width
 }
 @media(max-width:350px){.identity b{font-size:12px;max-width:105px}.identity .mark{width:26px;height:31px;font-size:22px}.tools button{min-width:35px}#language{min-width:48px}.result-tools{max-width:130px}.result-tools select{max-width:130px}.results-top h2{font-size:19px}.nav{font-size:9px}#compareBar{font-size:10px}#compareBar button{font-size:10px}}
 @media print{nav{display:none!important}}
+
+/* Dalil v0.3 identity and explicit loading states. */
+.mark{font-family:Arial,sans-serif;letter-spacing:0;padding:0;font-size:28px}.load-status{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);background:var(--sage);border-radius:8px;padding:15px 17px;margin-bottom:18px;font-size:13px}.load-status[hidden]{display:none}.load-status button{border:1px solid var(--green);border-radius:6px;padding:9px 12px;min-height:44px;background:var(--panel);font-size:12px}.load-status.failed{background:var(--soft);border-color:var(--accent)}
