@@ -1,65 +1,80 @@
-# دليل — Dalil v0.4.0
+# دليل الادوية الاردني
+# The Jordanian Drugs Directory
 
-A static, mobile-friendly Arabic/English medicine directory for GitHub Pages. All 10,628 JFDA catalogue rows remain unchanged. The interface groups them into 8,525 product presentations so repeated pack rows do not crowd the results.
+Version 0.5.0 — 31 October 2026. A static Arabic/English medicine directory for GitHub Pages.
 
-## Install this update
+## Upload the update
 
-Extract the modified-files ZIP and upload **all its contents** into the same `dalil` publishing folder, replacing existing files. Include the new **core.js** file. Keep `catalogue.json` alongside index.html. The complete ZIP also includes the catalogue for a fresh installation.
+Extract the modified-files ZIP and upload **all its contents** into the existing `dalil` publishing location, replacing older files. Include the new **prices.json** and **manifest.en.webmanifest**, along with app.js, core.js, styles.css, index.html and sw.js. Keep catalogue.json in the same directory. The complete ZIP contains all website files, including the catalogue and pre-existing repository files.
 
-No build step, server, database account or ChatGPT sign-in is needed. Files work under a repository subpath such as `/dalil/`. After the GitHub Pages deployment succeeds, reopen the published address and refresh. The service-worker cache and script/style URLs are versioned for v0.4.0.
+No build, server, database account or ChatGPT sign-in is required. Open the GitHub Pages website after deployment, not a GitHub file preview. Refresh to obtain the versioned v0.5 assets.
 
-## What changed
+## Interface changes
 
-- Results show the trade name, source scientific label, form and pack summary. Manufacturer, agent and provenance details are inside the medicine page.
-- Pack rows with the same brand, scientific label, concentration, form, manufacturer, manufacturer country, agent and marketing company are grouped. Every original row remains inspectable and exportable.
-- Search responds on the next animation frame as you type. It works without pressing Enter or a Search button. Filters are collapsed until requested. Arabic and English searches normalise case, spacing and Arabic-Indic digits.
-- A prominent language button switches the interface and direction. There are 32 common Arabic generic/brand search aliases. These are search aids, not official Arabic registration labels; displayed names remain in the source language. Common forms and manufacturer countries have interface translations; unlisted source terms remain verbatim.
-- Medicine details include matching alternatives and all listed packs. A four-pack comparison is available from the bottom navigation.
-- Theme, larger text and export controls move into Settings.
-- Existing local favourites, comparison selections and language/theme preferences keep their original storage keys.
+- The site name is exactly **دليل الادوية الاردني** in Arabic and **The Jordanian Drugs Directory** in English, including the browser title and language-specific app manifests.
+- Text-size and night-mode controls are directly on the top strip. The language button shows the target language's initial: **E** for English and **ع** for العربية. Full language names remain available to screen readers and in tooltips.
+- The home page shows search guidance and coverage counts. It does **not** show an alphabetical drug list. Results start after typing or explicitly choosing a filter. Saved medicines remain available from their own tab.
+- Search responds as you type. Filters include dosage form, manufacturer country, concentration, pack contents and presence/absence of a historical price. Numeric concentration filtering matches complete numeric tokens: 10 does not match 100. Pack-count filtering can recognise bare tablet/capsule counts where the form supplies the unit.
+- Repeated pack rows are grouped into 8,525 presentations. All 10,628 original JFDA catalogue rows are preserved. All displayed medicine/ingredient names retain the original source spelling; common Arabic search aliases are lookup aids.
 
-## Price comparisons: what works now
+## Historical prices now included
 
-**Current official JFDA prices are not included.** The app does not invent prices or claim that a product is available in a pharmacy. The live JFDA price service returned an error during preparation. A downloadable JFDA price-reduction PDF displayed with a 2025 listing date has creation metadata from July 2023; it was not imported as current pricing.
+**5,046 catalogue packs have an imported historical price in JD (ISO currency JOD).** These are tax-inclusive public/citizen pack prices from the government resource labelled **12-Drug2020**, interpreted as a December 2020 file label.
 
-To compare real prices you have obtained:
+They are **historical references, not current prices**. The workbook properties show creation on 23 September 2020 and last save on 19 April 2021. Individual effective dates are not supplied or independently verified. The portal's July 2025 page-update date is not used as a price date. A record without a matched price is left unpriced, not shown as zero or free.
 
-1. Open a medicine and choose **Alternatives & prices**.
-2. Select two to four exact packs, then open the comparison.
-3. Enter each pack's price **including tax, in JOD**, its date and optionally a source such as a pharmacy or receipt. Do not enter patient information.
-4. Calculate. The app labels all amounts **Prices you entered**. They stay in this browser and are saved only after valid calculation.
+The historical file has 15,445 data rows, including non-drug/unpriced entries. 6,283 rows have usable positive public prices with valid fils precision. Exact conservative matching against the current catalogue, including local agent, accepted 5,046 pack records. The hospital-price column was not used.
 
-Prices support up to three decimal places (fils), including Arabic-Indic digit input. Zero, negative and invalid prices are rejected. Dates must be valid and not in the future. Quotes with different dates are displayed without a price ranking or savings calculation.
+Source page:
+https://opendata.gov.jo/en/dataset/drug-prices-838-2021
 
-For matching formulation fields and the same source pack label, pack prices can be compared. For different pack sizes, per-tablet or per-capsule comparison requires a conservative unit count readable from the source pack, such as `50 Tab`, `120` with tablet form, or `30 TAB /1 BOX`. A count whose stated unit contradicts the source form is rejected. Composite or ambiguous packs are not expanded. Unit costs can show fractions of a fils (up to six decimal places in JOD); pack prices show three decimals.
+Source resource:
+https://opendata.gov.jo/dataset/MIGRATED-838-2021/resource/b3c4be77-c54b-40a3-b048-17f4a4cad431/download/12-drug2020-.xls?increment=true
 
-Any ranking says **Lowest of the entered prices**, not the cheapest product in Jordan. Differences are relative to the first selected pack. Editing a quote hides the old calculation until recalculation. Unsubmitted edits are retained while switching language or views in the current session.
+Despite its `.xls` URL, the downloaded file contains an XLSX workbook. The source page identifies JFDA as the organisation and the Jordanian open-data licence. Per-entry source row numbers, original price-source brand, pack, concentration and agent are preserved in prices.json. The source file hash, column names, dates, inclusion criteria and counts are in docs/PRICE_IMPORT_AUDIT.json.
 
-## Alternative matching
+## Matching method
 
-Candidates require the source scientific label, concentration and dosage form, with only case/spacing and explicit per-tablet/capsule notation normalised (`10 mg` and `10 MG/1 TAB` in tablet records). Salts, release formulations, routes, different strengths, different units and ingredient combinations are not treated as interchangeable. Incomplete records have no matching-formulation key. Different source spellings can leave out genuine alternatives.
+Price joins require matching brand name, concentration, pack and English local-agent label, after limited case/spacing/punctuation and explicit pack-unit normalisation. There is no fuzzy brand matching, clinical ingredient inference, conversion between dose units or assumption that similarly named products share a price. A price mapping to multiple current product identities, or conflicting source prices for one key, is rejected. No conflicting/ambiguous mappings were accepted in this release. Missing fields and nonpositive prices were excluded.
 
-Originator/generic status, bioequivalence, clinical substitution and current registration status are not established by this data. The comparison does not recommend treatment changes. Clinical, renal and dialysis dosing remain a separate pending content task.
+The catalogue has no stable JFDA registration identifier to join on, so these are documented source-field matches rather than identifier-verified registration links. Local record IDs are content hashes. The old source's prices and each current catalogue record's regulatory/availability status have not been independently reconfirmed.
 
-## Data source and limits
+## Automatic comparison and entered prices
 
-The original JFDA workbook is named 9 June 2026 and was retrieved on 31 October 2026. The source listing shows 2026/11/06, a conflicting date. This is a dated snapshot, not a verified current register or complete current-market inventory.
+1. Search for a medicine and open **Alternatives & prices**.
+2. Choose exact packs, then open the comparison.
+3. **Published historical prices** loads matched prices automatically and displays the source period beside each one.
+4. **Enter your prices** remains available for prices you obtain from a pharmacy or receipt. Those amounts stay in this browser and are clearly labelled as your inputs.
 
-302 scientific labels, 303 concentrations and one form are missing in the source. Missing data remain explicit. No barcode or live pharmacy-stock data are supplied. The `catalogue.json` bytes are unchanged from the uploaded v0.3 repository.
+Automatic ranking uses only prices from the same historical source snapshot, with matching source scientific/concentration/form fields. Different strengths or release forms are not ranked as equivalents. Identical source pack labels can be compared by pack price. Different pack sizes need readable, consistent tablet/capsule counts for per-unit calculations. Ambiguous packs and differing units do not get a calculated ranking. A price missing for any selected pack leaves available prices visible without a ranking or difference.
+
+The comparison identifies the lowest **within the chosen historical source**, not today's cheapest medicine in Jordan. Differences use the first selected pack as the reference. Unit prices may contain fractions of a fils and are displayed with up to six decimal places in JD. Pack prices are stored as integer fils and displayed with three decimals.
+
+User-entered quotes need positive amounts, valid non-future dates and matching dates before ranking. Editing quotes hides the previous calculation until recalculation. Unsubmitted edits survive language/view changes within the current session. Quotes and preferences are stored locally; there are no patient fields or analytics.
+
+Matching source fields does not establish originator/generic classification, bioequivalence or clinical interchangeability. Confirm strength, route and release properties before substituting a product. Clinical, renal and dialysis guidance remains a separate content task.
+
+## Catalogue source and coverage
+
+The unchanged 10,628-row catalogue comes from the JFDA registered-medicines workbook named 9 June 2026, retrieved on 31 October 2026. Its listing displays 2026/11/06, an inconsistent date. Neither current registration nor pharmacy stock is established by the snapshot. The source has 302 missing scientific labels, 303 missing concentrations and one missing dosage form; none were inferred.
 
 Source page:
 https://www.jfda.jo/AR/List/%D9%82%D9%88%D8%A7%D8%A6%D9%85
 
-The app is independent; JFDA is the source, not the publisher. Source URL, worksheet rows, original numeric percentage values and their Excel formats remain available in the catalogue. Detailed metadata are in `docs/SOURCE_AUDIT.json`.
+The app is independent. JFDA is a data source, not the app publisher. catalogue.json bytes are unchanged from the uploaded v0.4 repository. Pre-existing unrelated repository files are retained in the complete ZIP and are not newly integrated into the medicine interface.
 
-## Files
+## Reproduce the price import
 
-Keep index.html, styles.css, app.js, **core.js**, catalogue.json, sw.js, manifest.webmanifest and the icons together. Do not open index.html directly as a local file; serve it or use the GitHub Pages address.
+Python with openpyxl is needed only for data maintenance, not for the website. Download the exact historical workbook and verify its SHA-256 against the audit, then run:
 
-Offline support depends on the browser retaining its cache; open the site online once first. This release was tested in desktop and narrow browser views, not on a physical phone with networking disabled.
+```bash
+python scripts/import_historical_prices.py /path/to/source.xlsx --retrieved-on 2026-10-31
+```
+
+The importer asserts the expected columns and produces prices.json and its audit. It does not modify catalogue.json. This release's output was regenerated and compared for equality. A different file or date needs a reviewed release and updated source-period labels; there is no live price synchronisation.
 
 ## Validation
 
-All source rows preserved and all grouped rows reconciled. Checks covered integer monetary parsing, Arabic digits, per-unit matching, different strengths/releases, missing prices, mismatched dates, ambiguous packs and unit-price calculations. Browser checks covered input-driven search, Arabic aliases, English/Arabic switching, grouped results, source-matched alternatives, entering two pack prices, recalculation, language-switch draft retention, date guards and overflow at 320/390px frame widths. A desktop view was also checked. QA prices were test inputs in a separate preview browser; no example or invented prices are shipped in the catalogue.
+All imported price links and positive integer fils values checked, with real-source spot checks for Glucophage, Diaphage and Metforal. Checked pack and per-unit arithmetic, source-snapshot guards, missing prices, concentration differences and quoted-price safeguards. Verified all original catalogue bytes remain unchanged. Browser checks covered the search-only home, full names and E/ع controls, direct text/night controls, concentration/pack/price filters, actual imported-price cards and automatic historical comparison at 320/390px frame widths. No page overflow was found in those checks. Physical-phone installation and disconnected offline behaviour still need device verification.
 
-To enable automatic official-price comparisons later, obtain an authorised current source with product identifiers, formulation, pack, price type/currency and effective dates, then review exact joins. A search result or similar brand spelling alone is not a sufficient price join.
+App assets, the catalogue and historical prices are cached after a successful online visit where supported. Keep all files together under the same GitHub Pages publishing folder.

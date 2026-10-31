@@ -1,5 +1,4 @@
-دليل — Dalil v0.4.0
-Release: 31 October 2026
-Instant grouped search, bilingual interface, conservative alternatives and entered-price comparison
-Current official prices not imported
-Source catalogue unchanged: 10,628 product rows
+دليل الادوية الاردني
+The Jordanian Drugs Directory
+v0.5.0 — 31 October 2026
+Search-only home; direct display controls; 5,046 matched historical pack prices from December 2020 source
