@@ -1,0 +1,35 @@
+{
+  "metadata": {
+    "currency": "JOD",
+    "displayCurrency": "JD",
+    "priceType": "tax-inclusive public/citizen pack price",
+    "historical": true,
+    "importedOn": "2026-10-31",
+    "entryCount": 5046,
+    "sources": [
+      {
+        "id": "jfda-2020-12",
+        "labelAr": "ملف ديسمبر 2020",
+        "labelEn": "December 2020 file",
+        "period": "2020-12",
+        "dateBasis": "filename label; effective dates not independently verified",
+        "url": "https://opendata.gov.jo/dataset/MIGRATED-838-2021/resource/b3c4be77-c54b-40a3-b048-17f4a4cad431/download/12-drug2020-.xls?increment=true",
+        "pageUrl": "https://opendata.gov.jo/en/dataset/drug-prices-838-2021",
+        "sha256": "eb4f01e3cf44536c945c4daace48dc09e7faf916846c91d39f096ec103e277a5",
+        "workbookCreated": "2020-09-23",
+        "workbookModified": "2021-04-19",
+        "sheet": "COS",
+        "sourceRows": 15445,
+        "priceColumn": "DRG_TAXED_JORD_CITIZEN_PRICE",
+        "concentrationColumn": "DRG_CONCENTRATE",
+        "packColumn": "DRG_FILLING",
+        "agentColumn": "STORES_DESC_L"
+      }
+    ]
+  },
+  "validPositivePublicPriceRows": 6283,
+  "targetCandidatesBeforeAgentCheck": 5514,
+  "acceptedRows": 5046,
+  "rejectedAmbiguousOrConflicting": [],
+  "method": "Exact conservative brand, pack, source concentration and English agent comparison. No fuzzy name matching. Missing or nonpositive prices excluded. Hospital price column not imported. Matches ambiguous across current product identities rejected."
+}

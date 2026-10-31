@@ -25,5 +25,8 @@
   "priceRecords": 0,
   "clinicalMonographs": 0,
   "availability": "Not supplied",
-  "coverage": "All nonempty rows in this one source workbook; not a claim of complete current market coverage."
+  "coverage": "All nonempty rows in this one source workbook; not a claim of complete current market coverage.",
+  "applicationNameAr": "دليل الادوية الاردني",
+  "applicationNameEn": "The Jordanian Drugs Directory",
+  "applicationRelease": "0.5.0"
 }
