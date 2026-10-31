@@ -1,0 +1,4 @@
+Jordan Medicines Atlas v0.2.0
+GitHub Pages edition
+Release: 31 October 2026
+JFDA source filename date: 9 June 2026
