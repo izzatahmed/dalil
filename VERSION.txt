@@ -1,5 +1,5 @@
-دليل — Dalil v0.3.0
-GitHub Pages edition
+دليل — Dalil v0.4.0
 Release: 31 October 2026
-JFDA source filename date: 9 June 2026
-Catalogue records unchanged: 10,628
+Instant grouped search, bilingual interface, conservative alternatives and entered-price comparison
+Current official prices not imported
+Source catalogue unchanged: 10,628 product rows
