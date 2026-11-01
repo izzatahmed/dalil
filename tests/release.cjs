@@ -2,7 +2,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
 (async()=>{
  const moduleURL=source=>'data:text/javascript;base64,'+Buffer.from(source).toString('base64');
  const coreURL=moduleURL(fs.readFileSync('core.js','utf8')),c=await import(coreURL);
- const s=await import(moduleURL(fs.readFileSync('search.js','utf8').replace('./core.js?v=0.10.0',coreURL)));
+ const s=await import(moduleURL(fs.readFileSync('search.js','utf8').replace('./core.js?v=0.12.0',coreURL)));
  const catalogue=JSON.parse(fs.readFileSync('catalogue.json')),prices=JSON.parse(fs.readFileSync('prices.json'));
  const groups=c.groupRecords(catalogue.records);for(const g of groups)g.search=c.searchKey(g.rows.map(r=>Object.values(r).join(' ')).join(' '));
  const index=s.makeSearchIndex(groups),p=new Map(prices.entries.map(p=>[p.recordId,p]));
@@ -81,4 +81,17 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
  assert.equal(p.get(e23[0].recordId).sourceId,'jfda-2023-07-reduced','2023 price is the one shown');
  const azarten=catalogue.records.find(r=>r.brand==='Azarten FC Tab'&&r.pack==='14');assert.equal(p.get(azarten.id).fils,2370);
  console.log('PASS: JFDA reduced-price list (July 2023): 374 items, 328 matched to catalogue packs; 2023 price shown over the 2020 price.');
+ const bcs=JSON.parse(fs.readFileSync('barcodes.json'));assert.equal(bcs.meta.catalogueSha256,catalogue.meta.sha256);assert(Object.keys(bcs.codes).length>3500);
+ for(const [code,ids] of Object.entries(bcs.codes)){assert(/^\d{8,14}$/.test(code),code);for(const id of ids)assert(byRecord.has(id),id);}
+ const gl=catalogue.records.find(r=>r.brand==='GLUCOPHAGE 500MG'&&r.pack==='50 Tab');const glCode=Object.entries(bcs.codes).find(([,ids])=>ids.includes(gl.id));
+ if(glCode){const grp=groups.find(x=>x.rows.some(r=>r.id===gl.id));const withCodes={...grp,search:grp.search+' '+glCode[0]};assert(s.matchesSearch(withCodes,glCode[0],'all'));}
+ const para=groups.find(x=>/^paracetamol/i.test(x.record.scientific||''));assert(!s.matchesSearch(para,'tamol','all'));assert(s.matchesSearch(para,'tamol','all',true),'contains search');
+ assert(src.includes("fetch('./barcodes.json'")&&src.includes('function findBarcode(raw)')&&src.includes('formMatches(g.record.form,form)')&&fs.readFileSync('sw.js','utf8').includes("'./barcodes.json'"));
+ const ctx2=vm.createContext({lang:'en'});vm.runInContext(src.slice(src.indexOf('const FORM_GROUPS='),src.indexOf('const formLabel='))+';this.fg=formGroup;this.fm=formMatches;',ctx2);
+ for(const [f,g] of [['Film-coated tablet','tablet'],['Capsules','capsule'],['Solution for injection','injection'],['Eye drops','eye_ear'],['Suppository','suppository'],['Cream','topical'],['Syrup','liquid'],['Sachet','powder'],['Nasal spray','nasal'],['Inhalation powder','inhaled']])assert.equal(ctx2.fg(f),g,f);
+ assert(ctx2.fm('Tablet','grp:tablet')&&ctx2.fm('Tablet','Tablet')&&!ctx2.fm('Tablet','grp:capsule'));
+ const otherShare=catalogue.records.filter(r=>ctx2.fg(r.form)==='other').length/catalogue.records.length;assert(otherShare<0.02,otherShare);
+ console.log('PASS: '+Object.keys(bcs.codes).length+' barcodes for '+bcs.meta.records+' packs; barcode and contains search; '+(100*(1-otherShare)).toFixed(1)+'% of rows in a dosage-form group.');
+ assert(src.includes('function setupVoice()')&&src.includes("rec.lang=lang==='ar'?'ar-JO':'en-US'")&&/id="voiceButton"[^>]*hidden/.test(fs.readFileSync('index.html','utf8')));
+ console.log('PASS: voice search wiring (Arabic/English, hidden without browser support).');
 })().catch(e=>{console.error(e);process.exitCode=1;});
