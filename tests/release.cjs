@@ -2,7 +2,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
 (async()=>{
  const moduleURL=source=>'data:text/javascript;base64,'+Buffer.from(source).toString('base64');
  const coreURL=moduleURL(fs.readFileSync('core.js','utf8')),c=await import(coreURL);
- const s=await import(moduleURL(fs.readFileSync('search.js','utf8').replace('./core.js?v=0.6.0',coreURL)));
+ const s=await import(moduleURL(fs.readFileSync('search.js','utf8').replace('./core.js?v=0.7.0',coreURL)));
  const catalogue=JSON.parse(fs.readFileSync('catalogue.json')),prices=JSON.parse(fs.readFileSync('prices.json'));
  const groups=c.groupRecords(catalogue.records);for(const g of groups)g.search=c.searchKey(g.rows.map(r=>Object.values(r).join(' ')).join(' '));
  const index=s.makeSearchIndex(groups),p=new Map(prices.entries.map(p=>[p.recordId,p]));
@@ -25,6 +25,26 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
  assert(groups.some(g=>s.matchesSearch(g,'جلوكوفاج ٥٠٠','all')));
  assert(groups.some(g=>s.matchesSearch(g,'نورفاسك','all')));
  const fake={record:{brand:'TEST 100MG'},search:'test 100 mg 30 tab'};assert(!s.matchesSearch(fake,'test 10','all'));assert(s.matchesSearch(fake,'test 100','all'));
+
+ const amox=groups.filter(g=>s.matchesFamily(g,'Amoxicillin'));
+ assert.equal(amox.flatMap(g=>g.rows).length,144);
+ assert.equal(new Set(amox.map(g=>g.record.form)).size,10);
+ assert(s.browseFormRank('Tablet')<s.browseFormRank('Vial'));assert(s.browseFormRank('Capsules')<s.browseFormRank('Vial'));assert(s.browseFormRank('Suspension')<s.browseFormRank('Vial')); 
+ assert(amox.some(g=>g.record.form==='Capsules'));assert(amox.some(g=>g.record.form==='Suspension'));assert(amox.some(g=>g.record.form==='Tablet'));assert(amox.some(g=>g.record.form==='Vial'));
+ const amoxSuggestion=s.suggestSearch('amoxocillin',index).find(x=>x.spelling&&x.family==='Amoxicillin');assert(amoxSuggestion);
+ assert.equal(s.suggestSearch('amoxicillin',index)[0].family,'Amoxicillin');assert.equal(s.suggestSearch('amoxicillin',index)[0].query,'Amoxicillin');
+ const iv=catalogue.records.find(r=>r.brand==='Amoclan 600 vials');assert(iv);
+ const family=s.medicineFamily(iv);assert.equal(family,'Amoxicillin + Clavulanic Acid');
+ const amoclanFamily=groups.filter(g=>s.matchesFamily(g,family));assert(amoclanFamily.some(g=>g.record.form==='Suspension'));assert(amoclanFamily.some(g=>g.record.form==='Tablet'));
+ assert(amoclanFamily.some(g=>!g.record.brand.toLowerCase().startsWith('amoclan')));
+ assert(amoclanFamily.every(g=>s.ingredientNames(g.record).length===2));
+ const oral=amoclanFamily.find(g=>g.record.form==='Tablet').record;assert.equal(c.compareRecordedPrices([{record:iv,price:p.get(iv.id)},{record:oral,price:p.get(oral.id)}]).reason,'differentFormulations');
+ const pure=amox.filter(g=>s.ingredientNames(g.record).length===1);assert(pure.length&&pure.length<amox.length);
+ assert.deepEqual(s.ingredientNames({scientific:'Amoxicillin (as Sodium)500 mg, Clavulanic Acid 100 mg'}),['Amoxicillin','Clavulanic Acid']);
+ assert.deepEqual(s.ingredientNames({scientific:'Amoxicillin Trihydrate 500 mg/5ml'}),['Amoxicillin']);
+ assert.deepEqual(s.ingredientNames({scientific:''}),[]);
+ assert(s.matchesSearch({record:{scientific:'Amoxycillin 500 mg'}},'amoxicillin','scientific'));
+ console.log('PASS: amoxicillin browsing includes '+amox.length+' presentations / 144 packs / 10 forms; IV Amoclan choice expands to '+amoclanFamily.length+' combination presentations, including oral forms and other brands.');
  const src=fs.readFileSync('app.js','utf8'),context=vm.createContext({});vm.runInContext(src.slice(src.indexOf('const L='),src.indexOf('const forms='))+';this.L=L;',context);
  const ar=Object.keys(context.L.ar),en=Object.keys(context.L.en);assert.deepEqual(ar.filter(k=>!en.includes(k)),[]);assert.deepEqual(en.filter(k=>!ar.includes(k)),[]);
  assert.equal(groups.flatMap(g=>g.rows).length,10628);assert.equal(p.size,5046);
