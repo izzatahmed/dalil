@@ -1,7 +1,7 @@
 # دليل الادوية الاردني
 # The Jordanian Drugs Directory
 
-Version **0.7.0**, 1 November 2026. A mobile-first Arabic/English static directory for GitHub Pages. It is an independent directory using JFDA source data.
+Version **0.8.0**, 1 November 2026. A mobile-first Arabic/English static directory for GitHub Pages. It is an independent directory using JFDA source data.
 
 ## Upload the update
 
@@ -9,7 +9,18 @@ Extract the modified-files ZIP and upload **all its contents** into the existing
 
 No build, account, API key or server is required. Keep the files at the ZIP root rather than creating a second nested `dalil` folder. GitHub Pages should publish the same directory as before. The versioned service worker refreshes the app assets; reload after deployment if an older version remains visible.
 
-## Search improvements in v0.7
+## Arabic search and night appearance in v0.8
+
+- `فاموتيدين` and `Famotidine` return the same 17 presentations / 35 source packs. `فامودار`, `فامو دار` and `Famodar` return the same 4 presentations / 9 source packs. Selecting a name still opens the broader ingredient family.
+- Arabic matching normalises vowel marks, tatweel, Arabic/Persian digit scripts and common letter variants. Explicit brand/ingredient aliases are checked against source labels. Queries such as `فامودار٢٠ملغ` preserve the requested concentration.
+- Unlisted Arabic spellings can use conservative phonetic matching against source brand/ingredient words. These are search candidates, not verified Arabic registration names; a note asks users to check the displayed English name and strength. Complete long names require complete phonetic-word matches; only short typed prefixes use prefix matching. The original names remain visible.
+- English matching uses word prefixes, avoiding accidental matches inside a different ingredient name, such as Citalopram inside Escitalopram. Neither browsing nor phonetic matching modifies clinical/price equivalence.
+- During a newly typed search, if an old field mode or previous filters hide every match but the catalogue contains matches, the app switches to All and clears those previous filters with a visible message. Filters deliberately changed after typing are respected, even when they produce no results. Invalid or unavailable strengths are not silently removed.
+- A unified night palette covers the root viewport, body, cards, search controls, filters, dialogs, comparison/saved panels, navigation and empty home. The body fills the viewport. Stored night preferences are applied before the stylesheet renders to avoid a light-page flash.
+- The top appearance button has a 44 px minimum width and 48 px minimum height on phones, a clear moon/sun icon, and a visible Night/Day or ليلي/نهاري label. Its action, pressed state and browser theme colour update together.
+
+### Retained browsing features
+
 
 - Exact Arabic/English names and the direct text-size, night and E/ع controls are retained.
 - The home page stays search-only. The 10,628 original source rows remain searchable.
@@ -34,13 +45,13 @@ Family scope, manufacturer filtering and the displayed query survive shared medi
 
 ## Historical prices and limits
 
-**5,046 catalogue packs have a matched historical tax-inclusive public/citizen price in JD (ISO JOD).** `prices.json` and `catalogue.json` are byte-for-byte unchanged from v0.6 (and v0.5).
+**5,046 catalogue packs have a matched historical tax-inclusive public/citizen price in JD (ISO JOD).** `prices.json` and `catalogue.json` are byte-for-byte unchanged from v0.7 (and earlier price-bearing versions).
 
 The price source is the official government resource labelled `12-Drug2020`, interpreted as a December 2020 filename label. Workbook creation is 23 September 2020; last save is 19 April 2021. Individual price effective dates are not supplied or independently verified. The portal's July 2025 update is not treated as a price date. These prices are historical references, not today's prices. Missing prices are not shown as zero or free.
 
 The original import retains source row references and raw fields, using conservative brand, pack, concentration and English-agent matching. It excludes missing/nonpositive amounts and ambiguous/conflicting joins, and uses the public/citizen column rather than the hospital column. Values are stored as integer fils.
 
-Additional official reduction lists were researched for v0.6; v0.7 changes search behavior without adding prices. A 2025-labelled page and older PDF creation metadata do not establish current price effective dates. No further prices passed release verification in this iteration. The research outcome is recorded in `docs/PRICE_RESEARCH_v0.6.json`.
+Additional official reduction lists were researched for v0.6; v0.7 and v0.8 change search behavior without adding prices. A 2025-labelled page and older PDF creation metadata do not establish current price effective dates. No further prices passed release verification in this iteration. The research outcome is recorded in `docs/PRICE_RESEARCH_v0.6.json`.
 
 Official source: https://opendata.gov.jo/en/dataset/drug-prices-838-2021
 
@@ -79,3 +90,5 @@ python scripts/import_historical_prices.py /path/to/source.xlsx --retrieved-on 2
 Local preferences, saved products, comparison choices and entered prices remain in the existing `jma-*` browser storage. There is no account, telemetry, patient database or analytics. Source dates, source links and limitations are available in About.
 
 Family result ordering places tablets, capsules and suspensions before vials/injectable forms, while retaining every matching source presentation.
+
+Browser review for v0.8 additionally covers Arabic/English query parity, stale-mode and stale-filter recovery, deliberate filtering, night-mode persistence on reload, full-viewport dark backgrounds, dark details dialogs and header sizing at 320/390 px. Physical-device installation and offline behavior were not independently retested.

@@ -1,16 +1,17 @@
 /* Browsing families are search aids. Clinical/price equivalence still uses core.alternativeKey. */
-import {searchKey,expandSearch} from './core.js?v=0.7.0';
-const normalizedQueryCache=new Map(),documentCache=new WeakMap(),ingredientCache=new WeakMap();
+import {searchKey,expandSearch} from './core.js?v=0.8.0';
+const normalizedQueryCache=new Map(),documentCache=new WeakMap(),ingredientCache=new WeakMap(),phoneticCache=new Map();
 const rawQueryKey=value=>expandSearch(value).replace(/\bamoxycillin\b/g,'amoxicillin');
 const queryKey=value=>{const key=String(value??'');if(normalizedQueryCache.has(key))return normalizedQueryCache.get(key);const result=rawQueryKey(key);if(normalizedQueryCache.size>300)normalizedQueryCache.clear();normalizedQueryCache.set(key,result);return result;};
 
 export function matchesSearch(group,query,mode='all') {
  const tokens=queryKey(query).match(/\d+(?:\.\d+)?|[a-z]+|[\u0621-\u064a]+|%/g)||[];
- const source=mode==='all'?group.search:group.record[mode];
- let cache=documentCache.get(group);if(!cache){cache={};documentCache.set(group,cache);}
- let document=cache[mode];if(!document||document.source!==source){const raw=queryKey(source);document=cache[mode]={source,raw,numbers:new Set((raw.match(/\d+(?:\.\d+)?/g)||[]).map(Number))};}
- return tokens.every(token=>/^\d/.test(token)?document.numbers.has(Number(token)):document.raw.includes(token));
+ const document=prepareDocument(group,mode);
+ if(tokens.some(token=>/[\u0621-\u064a]/.test(token))&&!document.phonetic){const labels=mode==='all'?group.record.brand+' '+group.record.scientific:group.record[mode];document.phonetic=new Set((searchKey(labels).match(/[a-z]+/g)||[]).map(phoneticKey).filter(Boolean));}
+ return tokens.every(token=>/^\d/.test(token)?document.numbers.has(Number(token)):(/[a-z]/.test(token)?document.words.some(word=>word.startsWith(token)):document.raw.includes(token))||/[\u0621-\u064a]/.test(token)&&arabicTokenMatches(token,document.phonetic));
 }
+
+function prepareDocument(group,mode){const source=mode==='all'?group.search:group.record[mode];let cache=documentCache.get(group);if(!cache){cache={};documentCache.set(group,cache);}let document=cache[mode];if(!document||document.source!==source){const raw=(mode==='all'?String(source??''):searchKey(source)).replace(/\bamoxycillin\b/g,'amoxicillin');document=cache[mode]={source,raw,words:raw.match(/[a-z]+|[\u0621-\u064a]+/g)||[],numbers:new Set((raw.match(/\d+(?:\.\d+)?/g)||[]).map(Number))};}return document;}
 
 /* Strip explicit dose/salt notation for browsing only, never for comparisons or source storage. */
 export function ingredientNames(record) {
@@ -66,6 +67,7 @@ export function makeSearchIndex(groups) {
   if(!x.groups.includes(g))x.groups.push(g);
  };
  for(const g of groups){
+  for(const mode of ['all','brand','scientific'])prepareDocument(g,mode);
   const family=medicineFamily(g.record);add('brand',g.record.brand,g,family);
   const names=ingredientNames(g.record);
   for(const name of names)add('scientific',name,g,name);
@@ -78,7 +80,8 @@ export function suggestSearch(query,index,mode='all',max=6) {
  const q=queryKey(query);if(q.length<2)return [];
  const eligible=index.filter(x=>mode==='all'||x.kind===mode);
  const entryMatches=(x,value)=>matchesSearch(x.document,value,x.kind)
-   ||x.kind==='scientific'&&x.groups.some(g=>matchesSearch(g,value,'scientific'));
+   ||x.kind==='scientific'&&(queryKey(value).match(/[a-z]+|[\u0621-\u064a]+/g)||[]).some(token=>!['mg','g','ml','mcg','ug','tab','tablet','capsule'].includes(token)&&matchesSearch(x.document,token,x.kind))&&x.groups.some(g=>matchesSearch(g,value,'scientific'));
+
  const rank=x=>[x.key===q?0:x.key.startsWith(q)?1:2,x.kind==='scientific'?0:1,x.label.split(' + ').length,x.label.length];
  const compare=(a,b)=>{const ar=rank(a),br=rank(b);for(let i=0;i<ar.length;i++)if(ar[i]!==br[i])return ar[i]-br[i];return a.label.localeCompare(b.label,'en',{numeric:true});};
  const result=x=>({label:x.label,query:x.label,kind:x.kind,family:x.family,groupId:x.group.id,count:x.groups.length,spelling:false});
@@ -98,3 +101,8 @@ export function suggestSearch(query,index,mode='all',max=6) {
 }
 
 export function browseFormRank(form){const f=searchKey(form);if(/^(?:tablet|caplet)$/.test(f)||/^(?:film[- ]coated|coated|chewable|effervescent|dispersible|scored|extended[- ]release|modified[- ]release|prolonged release|release) tablet$/.test(f))return 0;if(/^(?:capsules?|hard capsule|capsule, hard|capsule, soft|soft gelatin capsule)$/.test(f))return 1;if(!/injection|infusion/.test(f)&&/suspension|oral solution|syrup/.test(f))return 2;if(/vial|injection|infusion|ampoule/.test(f))return 8;return 5;}
+
+// Phonetic matching broadens discovery only; original English labels remain visible.
+export function phoneticKey(value){const raw=String(value??'');if(phoneticCache.has(raw))return phoneticCache.get(raw);let v=searchKey(raw);if(/[\u0621-\u064a]/.test(v)){v=v.replace(/ه$/,'');const letters={'ا':'a','ب':'b','ت':'t','ث':'t','ج':'j','ح':'h','خ':'kh','د':'d','ذ':'z','ر':'r','ز':'z','س':'s','ش':'sh','ص':'s','ض':'d','ط':'t','ظ':'z','ع':'a','غ':'g','ف':'f','ق':'k','ك':'k','ل':'l','م':'m','ن':'n','ه':'h','و':'w','ي':'y','ء':''};v=[...v].map(c=>letters[c]??c).join('');}const result=v.replace(/ph/g,'f').replace(/sh/g,'x').replace(/ch/g,'k').replace(/th/g,'t').replace(/c(?=[eiy])/g,'s').replace(/[cq]/g,'k').replace(/g/g,'j').replace(/p/g,'b').replace(/v/g,'f').replace(/z/g,'s').replace(/[aeiouwy]/g,'').replace(/[^a-z]/g,'');if(phoneticCache.size>30000)phoneticCache.clear();phoneticCache.set(raw,result);return result;}
+function arabicTokenMatches(token,words){const key=phoneticKey(token);if(token.length<3||key.length<2||!words)return false;if(words.has(key))return true;if(token.length<=4)for(const word of words)if(word.startsWith(key))return true;return false;}
+export function usesPhoneticSearch(value){return /[\u0621-\u064a]/.test(queryKey(value));}
