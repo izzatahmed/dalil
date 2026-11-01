@@ -1,13 +1,27 @@
 # دليل الادوية الاردني
 # The Jordanian Drugs Directory
 
-Version **0.8.0**, 1 November 2026. A mobile-first Arabic/English static directory for GitHub Pages. It is an independent directory using JFDA source data.
+Version **0.10.0**, 1 November 2026. A mobile-first Arabic/English static directory for GitHub Pages. It is an independent directory using JFDA source data.
 
 ## Upload the update
 
 Extract the modified-files ZIP and upload **all its contents** into the existing `dalil` publishing directory, replacing matching files. **Include the updated `app.js` and `search.js` together.** Keep the existing `catalogue.json`, `prices.json`, manifests and icons alongside `index.html`. The complete ZIP includes the full website and preserves pre-existing repository files.
 
 No build, account, API key or server is required. Keep the files at the ZIP root rather than creating a second nested `dalil` folder. GitHub Pages should publish the same directory as before. The versioned service worker refreshes the app assets; reload after deployment if an older version remains visible.
+
+## Newer prices in v0.10
+
+- The JFDA reduced-price list («قائمة الأدوية المخفضة», 374 items; PDF dated 25 July 2023, shown on the JFDA website with a 2025 date) was imported with `scripts/import_reduced_prices_2023.py`. 328 items matched a catalogue pack exactly (313 automatically, 15 after manual review). Their "current price including tax" now replaces the 2020 price, and 129 packs that had no price before now have one. Each price shows its source period (2020-12 or 2023-07). Comparisons and lower-priced options only rank prices from the same source.
+- Matching uses brand, every number in the product name, pack count and form. A match is accepted only when it is unique. The list's "previous price" agreed with the 2020 price for the same pack (median ratio 1.00), which confirms the matching. The 45 unmatched items (brands or packs not in the June 2026 catalogue, or ambiguous products) are listed in `docs/PRICE_LIST_2023-07.json` with a status.
+- Run order: `import_historical_prices.py` (2020 workbook), then `import_reduced_prices_2023.py <list.pdf>`. The second script is idempotent and checks the PDF's SHA-256.
+- About lists every price source; card labels show the actual price years.
+
+## Linked with RenalRounds in v0.9
+
+- Product details now show **Kidney dosing · RenalRounds** (جرعات مرضى الكلى) links for 6,811 of the 10,628 JFDA rows. Each link opens the matching adult renal-dosing entry at izzatahmed.github.io/drugs, matched by active ingredient and route: tablets and syrups link to the oral entry, vials and ampoules to the IV entry, and creams, eye or nasal products only to a topical entry (for example, Protopic ointment is not linked to systemic tacrolimus). Combination products link to each ingredient and to the combination entry when RenalRounds has one.
+- The links come from `renalrounds.json`, which RenalRounds' `build_dalil_links.py` generates from this catalogue. It records the catalogue SHA-256 and must be regenerated whenever `catalogue.json` changes. The site still works if the file is missing; the links are simply hidden.
+- About links to RenalRounds. RenalRounds links back: each medicine there shows "Products in Jordan" with a button that opens this directory filtered by scientific name.
+- Upload every file in the update ZIP together (it includes all v0.9 and v0.10 changes).
 
 ## Arabic search and night appearance in v0.8
 

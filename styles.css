@@ -23,3 +23,5 @@ html{min-height:100%;background:var(--bg)}body{min-height:100vh;min-height:100dv
 @media(max-width:780px){#theme.strip-control{width:44px;min-width:44px;min-height:48px}#theme svg{width:23px;height:23px}#theme>span{font-size:10px}.top-actions{align-items:center}.phonetic-note{font-size:11px}.brand b{max-width:175px}}
 @media(max-width:350px){.brand b{max-width:126px}.top-actions{gap:2px}#theme.strip-control{width:44px;min-width:44px}}
 @media(prefers-reduced-motion:reduce){body,.topbar,.medicine-card,.search-shell,.comparison-card,.family-overview,.quote-card,dialog{transition:none}}
+
+.rr-links{margin-top:18px;border-top:1px solid var(--border);padding-top:14px}.rr-links h3{margin:0 0 4px;font-size:14px}.rr-links .medicine-links{margin-top:8px}.rr-links .medicine-links a{color:var(--green);font-weight:600}

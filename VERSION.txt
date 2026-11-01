@@ -1,6 +1,6 @@
 دليل الادوية الاردني
 The Jordanian Drugs Directory
-v0.8.0
+v0.10.0
 Release: 2026-11-01
-Arabic/English search, clearer appearance control, continuous night surfaces.
-Catalogue: 10,628 original JFDA rows; 5,046 matched historical pack prices.
+Prices: JFDA reduced-price list (July 2023) added for 328 packs; linked with RenalRounds.
+Catalogue: 10,628 original JFDA rows; 5,175 packs with a dated price (2020 or 2023).
