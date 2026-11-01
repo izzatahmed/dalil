@@ -2,7 +2,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
 (async()=>{
  const moduleURL=source=>'data:text/javascript;base64,'+Buffer.from(source).toString('base64');
  const coreURL=moduleURL(fs.readFileSync('core.js','utf8')),c=await import(coreURL);
- const s=await import(moduleURL(fs.readFileSync('search.js','utf8').replace('./core.js?v=0.8.0',coreURL)));
+ const s=await import(moduleURL(fs.readFileSync('search.js','utf8').replace('./core.js?v=0.10.0',coreURL)));
  const catalogue=JSON.parse(fs.readFileSync('catalogue.json')),prices=JSON.parse(fs.readFileSync('prices.json'));
  const groups=c.groupRecords(catalogue.records);for(const g of groups)g.search=c.searchKey(g.rows.map(r=>Object.values(r).join(' ')).join(' '));
  const index=s.makeSearchIndex(groups),p=new Map(prices.entries.map(p=>[p.recordId,p]));
@@ -62,6 +62,23 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
  console.log('PASS: Arabic/English parity for Famotidine (17 presentations/35 packs), Famodar (4/9), diacritics, tatweel, digit scripts, units, Arabic suggestions and conservative phonetic examples.');
  const src=fs.readFileSync('app.js','utf8'),context=vm.createContext({});vm.runInContext(src.slice(src.indexOf('const L='),src.indexOf('const forms='))+';this.L=L;',context);
  const ar=Object.keys(context.L.ar),en=Object.keys(context.L.en);assert.deepEqual(ar.filter(k=>!en.includes(k)),[]);assert.deepEqual(en.filter(k=>!ar.includes(k)),[]);
- assert.equal(groups.flatMap(g=>g.rows).length,10628);assert.equal(p.size,5046);
+ assert.equal(groups.flatMap(g=>g.rows).length,10628);assert.equal(p.size,5175);
  console.log('PASS: historical price guards, release/route exclusions, same-size priority, bilingual suggestions, typo/strength safeguards, source row preservation and '+ar.length+' translation pairs.');
+ const rr=JSON.parse(fs.readFileSync('renalrounds.json'));assert.equal(rr.base,'https://izzatahmed.github.io/drugs/#drug=');assert.equal(rr.catalogueSha256,catalogue.meta.sha256);
+ const byRecord=new Map(catalogue.records.map(r=>[r.id,r]));const rrIds=Object.keys(rr.records);assert(rrIds.length>5000);
+ for(const id of rrIds){assert(byRecord.has(id),id);for(const i of rr.records[id]){assert(Number.isInteger(i)&&rr.drugs[i],id);}}
+ for(const [id,name] of rr.drugs)assert(/^[a-z0-9-]+$/.test(id)&&name,id);
+ const rrFor=pred=>{const r=catalogue.records.find(pred);assert(r);return (rr.records[r.id]||[]).map(i=>rr.drugs[i][0]);};
+ assert.deepEqual(rrFor(r=>r.brand==='GLUCOPHAGE 500MG'),['metformin']);
+ assert(rrFor(r=>/^Prograf/i.test(r.brand)).includes('tacrolimus'));assert(!rrFor(r=>/^Protopic/i.test(r.brand)).includes('tacrolimus'));
+ assert(rrFor(r=>/^Entresto/i.test(r.brand)).includes('sacubitril-valsartan'));
+ assert(rrFor(r=>r.brand==='Amoclan 600 vials').includes('amoxicillin-clavulanate'));
+ assert(src.includes("fetch('./renalrounds.json'")&&src.includes('function rrLinks(g)')&&fs.readFileSync('sw.js','utf8').includes("'./renalrounds.json'"));
+ console.log('PASS: RenalRounds links for '+rrIds.length+' JFDA records to '+rr.drugs.length+' RenalRounds entries; ingredient and route checks (Glucophage, Prograf vs Protopic, Entresto, IV Amoclan).');
+ const pl=JSON.parse(fs.readFileSync('docs/PRICE_LIST_2023-07.json')),src23=prices.meta.sources.find(x=>x.id==='jfda-2023-07-reduced');assert(src23&&src23.period==='2023-07');
+ assert.equal(pl.items.length,374);const e23=prices.entries.filter(x=>x.sourceId==='jfda-2023-07-reduced');assert.equal(e23.length,328);assert.equal(new Set(e23.map(x=>x.recordId)).size,328);
+ for(const x of e23){const it=pl.items.find(i=>i.n===x.sourceItem);assert(it&&it.recordId===x.recordId&&it.fils===x.fils&&x.fils<x.previousFils,x.sourceItem);}
+ assert.equal(p.get(e23[0].recordId).sourceId,'jfda-2023-07-reduced','2023 price is the one shown');
+ const azarten=catalogue.records.find(r=>r.brand==='Azarten FC Tab'&&r.pack==='14');assert.equal(p.get(azarten.id).fils,2370);
+ console.log('PASS: JFDA reduced-price list (July 2023): 374 items, 328 matched to catalogue packs; 2023 price shown over the 2020 price.');
 })().catch(e=>{console.error(e);process.exitCode=1;});
