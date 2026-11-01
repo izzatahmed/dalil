@@ -1,13 +1,25 @@
 # دليل الادوية الاردني
 # The Jordanian Drugs Directory
 
-Version **0.10.0**, 1 November 2026. A mobile-first Arabic/English static directory for GitHub Pages. It is an independent directory using JFDA source data.
+Version **0.12.0**, 1 November 2026. A mobile-first Arabic/English static directory for GitHub Pages. It is an independent directory using JFDA source data.
 
 ## Upload the update
 
 Extract the modified-files ZIP and upload **all its contents** into the existing `dalil` publishing directory, replacing matching files. **Include the updated `app.js` and `search.js` together.** Keep the existing `catalogue.json`, `prices.json`, manifests and icons alongside `index.html`. The complete ZIP includes the full website and preserves pre-existing repository files.
 
 No build, account, API key or server is required. Keep the files at the ZIP root rather than creating a second nested `dalil` folder. GitHub Pages should publish the same directory as before. The versioned service worker refreshes the app assets; reload after deployment if an older version remains visible.
+
+## Voice search in v0.12
+
+- A mic button in the search box listens in Arabic (ar-JO) or English, following the interface language. It appears only in browsers that offer speech recognition (Chrome on Android, recent Safari). Of the recognised alternatives, the first one that matches a product is used; otherwise the spelling suggestions and Arabic phonetic matching take over.
+- Privacy: speech is processed by the browser's own speech-recognition service (in Chrome usually Google's servers), not by Dalil. Nothing starts until the mic is tapped, and the button says so.
+
+## Barcode scanner and easier searching in v0.11
+
+- **Scan the box.** The barcode button in the search box opens the phone camera (Android Chrome and other browsers with the Barcode Detection API). It reads EAN/UPC barcodes and the GS1 DataMatrix codes on newer packs, entirely on the phone — no image is sent. A recognised barcode opens that product. Browsers without camera barcode support (for example iPhone Safari) show a box for typing the number under the barcode. A barcode number typed in the main search box also finds the product.
+- `barcodes.json` holds 3,807 barcodes for 3,857 packs. They come from the `DRG_BARCODE` column of the December 2020 JFDA price workbook, for packs already matched by `import_historical_prices.py`. Rebuild with `scripts/build_barcodes.py <workbook>`; it checks the workbook SHA-256. Packs without a barcode in that file are found by name. Each product's details show its barcode.
+- **"Contains" search.** When no name starts with the typed text, Dalil shows names that contain it (for example `tamol` finds paracetamol) and says so.
+- **Dosage-form groups.** The form filter now starts with 10 groups (tablets, capsules, injections, oral liquids, skin, eye & ear, suppositories, inhalers, nasal, powders) covering 98.8% of rows; the exact source forms remain below them.
 
 ## Newer prices in v0.10
 

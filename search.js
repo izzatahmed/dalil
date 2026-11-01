@@ -1,14 +1,14 @@
 /* Browsing families are search aids. Clinical/price equivalence still uses core.alternativeKey. */
-import {searchKey,expandSearch} from './core.js?v=0.10.0';
+import {searchKey,expandSearch} from './core.js?v=0.12.0';
 const normalizedQueryCache=new Map(),documentCache=new WeakMap(),ingredientCache=new WeakMap(),phoneticCache=new Map();
 const rawQueryKey=value=>expandSearch(value).replace(/\bamoxycillin\b/g,'amoxicillin');
 const queryKey=value=>{const key=String(value??'');if(normalizedQueryCache.has(key))return normalizedQueryCache.get(key);const result=rawQueryKey(key);if(normalizedQueryCache.size>300)normalizedQueryCache.clear();normalizedQueryCache.set(key,result);return result;};
 
-export function matchesSearch(group,query,mode='all') {
+export function matchesSearch(group,query,mode='all',contains=false) {
  const tokens=queryKey(query).match(/\d+(?:\.\d+)?|[a-z]+|[\u0621-\u064a]+|%/g)||[];
  const document=prepareDocument(group,mode);
  if(tokens.some(token=>/[\u0621-\u064a]/.test(token))&&!document.phonetic){const labels=mode==='all'?group.record.brand+' '+group.record.scientific:group.record[mode];document.phonetic=new Set((searchKey(labels).match(/[a-z]+/g)||[]).map(phoneticKey).filter(Boolean));}
- return tokens.every(token=>/^\d/.test(token)?document.numbers.has(Number(token)):(/[a-z]/.test(token)?document.words.some(word=>word.startsWith(token)):document.raw.includes(token))||/[\u0621-\u064a]/.test(token)&&arabicTokenMatches(token,document.phonetic));
+ return tokens.every(token=>/^\d/.test(token)?document.numbers.has(Number(token)):(/[a-z]/.test(token)?document.words.some(word=>contains&&token.length>=3?word.includes(token):word.startsWith(token)):document.raw.includes(token))||/[\u0621-\u064a]/.test(token)&&arabicTokenMatches(token,document.phonetic));
 }
 
 function prepareDocument(group,mode){const source=mode==='all'?group.search:group.record[mode];let cache=documentCache.get(group);if(!cache){cache={};documentCache.set(group,cache);}let document=cache[mode];if(!document||document.source!==source){const raw=(mode==='all'?String(source??''):searchKey(source)).replace(/\bamoxycillin\b/g,'amoxicillin');document=cache[mode]={source,raw,words:raw.match(/[a-z]+|[\u0621-\u064a]+/g)||[],numbers:new Set((raw.match(/\d+(?:\.\d+)?/g)||[]).map(Number))};}return document;}
