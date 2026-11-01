@@ -28,6 +28,6 @@
   "coverage": "All nonempty rows in this one source workbook; not a claim of complete current market coverage.",
   "applicationNameAr": "دليل الادوية الاردني",
   "applicationNameEn": "The Jordanian Drugs Directory",
-  "applicationRelease": "0.7.0",
+  "applicationRelease": "0.8.0",
   "applicationHistoricalPriceRecords": 5046
 }
