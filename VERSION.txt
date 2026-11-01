@@ -1,6 +1,6 @@
 دليل الادوية الاردني
 The Jordanian Drugs Directory
-v0.6.0
+v0.7.0
 Release: 2026-11-01
+Search: ingredient-family browsing, double-click name, all forms/strengths/manufacturers.
 Catalogue: 10,628 original JFDA rows; 5,046 matched historical pack prices.
-Historical source label: December 2020; effective dates unverified.
