@@ -1,0 +1,20 @@
+{
+  "checkedOn": "2026-11-01",
+  "importedNewPrices": 0,
+  "retainedMatchedHistoricalPrices": 5046,
+  "sources": [
+    {
+      "page": "https://opendata.gov.jo/en/dataset/drug-prices-838-2021",
+      "status": "Same December 2020-labelled workbook already imported; portal update date is not a price effective date."
+    },
+    {
+      "page": "https://www.jfda.jo/Ar/NewsDetails/قوائم_تخفيضات_الأدوية_الدورية",
+      "status": "Official reduction list located. Linked PDF download did not complete in this verification run."
+    },
+    {
+      "page": "https://jfda.jo/AR/List/قوائم",
+      "status": "Reduction-list page carries a 2025 date; inspected earlier PDF has creation metadata 2023-07-25. Current effective dates not verified."
+    }
+  ],
+  "decision": "No additional amounts imported in v0.6. Existing prices and source records remain byte-for-byte unchanged. Further imports require verified source bytes, conservative pack matching and explicit date provenance."
+}
