@@ -2,7 +2,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
 (async()=>{
  const moduleURL=source=>'data:text/javascript;base64,'+Buffer.from(source).toString('base64');
  const coreURL=moduleURL(fs.readFileSync('core.js','utf8')),c=await import(coreURL);
- const s=await import(moduleURL(fs.readFileSync('search.js','utf8').replace('./core.js?v=0.7.0',coreURL)));
+ const s=await import(moduleURL(fs.readFileSync('search.js','utf8').replace('./core.js?v=0.8.0',coreURL)));
  const catalogue=JSON.parse(fs.readFileSync('catalogue.json')),prices=JSON.parse(fs.readFileSync('prices.json'));
  const groups=c.groupRecords(catalogue.records);for(const g of groups)g.search=c.searchKey(g.rows.map(r=>Object.values(r).join(' ')).join(' '));
  const index=s.makeSearchIndex(groups),p=new Map(prices.entries.map(p=>[p.recordId,p]));
@@ -45,6 +45,21 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
  assert.deepEqual(s.ingredientNames({scientific:''}),[]);
  assert(s.matchesSearch({record:{scientific:'Amoxycillin 500 mg'}},'amoxicillin','scientific'));
  console.log('PASS: amoxicillin browsing includes '+amox.length+' presentations / 144 packs / 10 forms; IV Amoclan choice expands to '+amoclanFamily.length+' combination presentations, including oral forms and other brands.');
+
+ const matched=q=>groups.filter(g=>s.matchesSearch(g,q,'all'));
+ const ids=q=>matched(q).map(g=>g.id).sort();
+ for(const [ar,en] of [['فاموتيدين','famotidine'],['فامودار','famodar'],['فامو دار','famodar'],['فَـامُوتِيدِين','famotidine'],['بيبـتيفام','peptifam'],['سيتالوبرام','citalopram'],['لوسيك','losec']])assert.deepEqual(ids(ar),ids(en),ar);
+ assert.equal(matched('فاموتيدين').length,17);assert.equal(matched('فاموتيدين').flatMap(g=>g.rows).length,35);
+ assert.equal(matched('فامودار').length,4);assert.equal(matched('فامودار').flatMap(g=>g.rows).length,9);
+ assert.deepEqual(ids('فامودار٢٠ملغ'),ids('Famodar 20 mg'));assert.deepEqual(ids('فامودار ۲۰'),ids('Famodar 20'));
+ assert(s.suggestSearch('فامودار',index).some(x=>x.family==='Famotidine'));
+ assert(s.suggestSearch('فاموتيدين',index).some(x=>x.family==='Famotidine'));
+ assert(matched('citalopram').length>0);assert(matched('citalopram').every(g=>!/escitalopram/i.test(g.record.scientific)));
+ assert.notEqual(s.phoneticKey('citalopram'),s.phoneticKey('escitalopram'));
+ assert.notEqual(s.phoneticKey('Losec'),s.phoneticKey('Lescol'));
+ assert(matched('كلوبيدوجريل').some(g=>/clopidogrel/i.test(g.record.scientific)));
+ assert(matched('كلوبيدوجريل').every(g=>/clopidogrel/i.test(g.record.scientific)));
+ console.log('PASS: Arabic/English parity for Famotidine (17 presentations/35 packs), Famodar (4/9), diacritics, tatweel, digit scripts, units, Arabic suggestions and conservative phonetic examples.');
  const src=fs.readFileSync('app.js','utf8'),context=vm.createContext({});vm.runInContext(src.slice(src.indexOf('const L='),src.indexOf('const forms='))+';this.L=L;',context);
  const ar=Object.keys(context.L.ar),en=Object.keys(context.L.en);assert.deepEqual(ar.filter(k=>!en.includes(k)),[]);assert.deepEqual(en.filter(k=>!ar.includes(k)),[]);
  assert.equal(groups.flatMap(g=>g.rows).length,10628);assert.equal(p.size,5046);
