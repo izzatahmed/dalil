@@ -1,5 +1,5 @@
 /* Browsing families are search aids. Clinical/price equivalence still uses core.alternativeKey. */
-import {searchKey,expandSearch} from './core.js?v=0.12.0';
+import {searchKey,expandSearch} from './core.js?v=0.13.0';
 const normalizedQueryCache=new Map(),documentCache=new WeakMap(),ingredientCache=new WeakMap(),phoneticCache=new Map();
 const rawQueryKey=value=>expandSearch(value).replace(/\bamoxycillin\b/g,'amoxicillin');
 const queryKey=value=>{const key=String(value??'');if(normalizedQueryCache.has(key))return normalizedQueryCache.get(key);const result=rawQueryKey(key);if(normalizedQueryCache.size>300)normalizedQueryCache.clear();normalizedQueryCache.set(key,result);return result;};

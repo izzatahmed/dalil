@@ -1,6 +1,6 @@
 دليل الادوية الاردني
 The Jordanian Drugs Directory
-v0.12.0
-Release: 2026-11-01
-Voice search (Arabic/English); barcode scanner; contains search; dosage-form groups; 2023 JFDA prices; RenalRounds links.
-Catalogue: 10,628 original JFDA rows; 5,175 packs with a dated price (2020 or 2023).
+v0.13.0
+Release: 2026-11-03
+Recent prices (Nov 2026) for 32 key packs; kidney badge and RenalRounds link at the top of details; JFDA sign-in note.
+Catalogue: 10,628 original JFDA rows; 5,204 packs with a dated price (2020, 2023 or 2026).

@@ -1,13 +1,19 @@
 # دليل الادوية الاردني
 # The Jordanian Drugs Directory
 
-Version **0.12.0**, 1 November 2026. A mobile-first Arabic/English static directory for GitHub Pages. It is an independent directory using JFDA source data.
+Version **0.13.0**, 3 November 2026. A mobile-first Arabic/English static directory for GitHub Pages. It is an independent directory using JFDA source data.
 
 ## Upload the update
 
 Extract the modified-files ZIP and upload **all its contents** into the existing `dalil` publishing directory, replacing matching files. **Include the updated `app.js` and `search.js` together.** Keep the existing `catalogue.json`, `prices.json`, manifests and icons alongside `index.html`. The complete ZIP includes the full website and preserves pre-existing repository files.
 
 No build, account, API key or server is required. Keep the files at the ZIP root rather than creating a second nested `dalil` folder. GitHub Pages should publish the same directory as before. The versioned service worker refreshes the app assets; reload after deployment if an older version remains visible.
+
+## Recent prices and clearer kidney links in v0.13
+
+- 32 packs of important medicines (Entresto, Kerendia, Eliquis, Pradaxa, Ozempic, Verquvo, Prograf, Advagraf, Valcyte, One-Alpha, Aranesp, Eprex, Prolia, Repatha, NovoRapid, Exforge and others) have a recent public price, looked up on 3 November 2026 on the Drug Center pharmacy website by the site editor and matched to each pack by hand (`scripts/import_pharmacy_prices_2026_11.py`, `docs/PRICE_CHECK_2026-11-03.json`). 29 of them had no price before. These are labelled "Recent price · 2026-11"; older ones keep "Historical price".
+- Results show a **Kidney** badge when the medicine has a RenalRounds page, and the RenalRounds link now sits at the top of the details, under the name.
+- A note beside the JFDA links explains that a sign-in page may appear: ignore it and click the link again.
 
 ## Voice search in v0.12
 
