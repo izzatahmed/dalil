@@ -1,0 +1,335 @@
+{
+ "source": {
+  "id": "drugcenter-2026-11-03",
+  "labelAr": "موقع صيدلية دراغ سنتر — تاريخ الاطلاع 3 تشرين الثاني 2026",
+  "labelEn": "Drug Center pharmacy website — checked 3 November 2026",
+  "period": "2026-11",
+  "recent": true,
+  "dateBasis": "Public price shown on drugcenterjo.net, looked up by the site editor on 3 November 2026 and matched to the pack by hand.",
+  "pageUrl": "https://drugcenterjo.net/",
+  "sha256": "fa68af5a24efa22464e578f9ecbfcee9ceac56f19cb3791f2ecc94b9496f720e",
+  "items": 32
+ },
+ "items": [
+  {
+   "item": 1,
+   "brand": "Entresto",
+   "strength": "24/26 mg",
+   "pack": "Entresto 50mg 28 Tab",
+   "price": 48.63,
+   "recordId": "0ac410c0114aea625e-1",
+   "catalogueBrand": "Entresto",
+   "cataloguePack": "28"
+  },
+  {
+   "item": 2,
+   "brand": "Entresto",
+   "strength": "49/51 mg (100 mg)",
+   "pack": "Entresto 100mg 56 Tab",
+   "price": 92.39,
+   "recordId": "732ed37228fde84580-1",
+   "catalogueBrand": "Entresto 100mg",
+   "cataloguePack": "56"
+  },
+  {
+   "item": 3,
+   "brand": "Entresto",
+   "strength": "97/103 mg (200 mg)",
+   "pack": "Entresto 200mg 56 Tab",
+   "price": 101.68,
+   "recordId": "c2749618ff7372b71b-1",
+   "catalogueBrand": "Entresto 200 mg",
+   "cataloguePack": "56 Tab"
+  },
+  {
+   "item": 4,
+   "brand": "Kerendia",
+   "strength": "10 mg",
+   "pack": "Kerendia 10mg 28Tab",
+   "price": 54.28,
+   "recordId": "0b0446e37eb8dbf315-1",
+   "catalogueBrand": "Kerendia film-coated tablet",
+   "cataloguePack": "28 TAB /1 BOX"
+  },
+  {
+   "item": 5,
+   "brand": "Kerendia",
+   "strength": "20 mg",
+   "pack": "20mg 28Tab",
+   "price": 54.28,
+   "recordId": "0feec8cccd15264577-1",
+   "catalogueBrand": "Kerendia film-coated tablet",
+   "cataloguePack": "28 TAB /1 BOX"
+  },
+  {
+   "item": 6,
+   "brand": "Eliquis",
+   "strength": "2.5 mg",
+   "pack": "Eliquis 2.5mg 60 Tab",
+   "price": 63.74,
+   "recordId": "b240cb2d9d9cc6f12f-1",
+   "catalogueBrand": "Eliquis 2.5",
+   "cataloguePack": "60"
+  },
+  {
+   "item": 7,
+   "brand": "Eliquis",
+   "strength": "5 mg",
+   "pack": "Eliquis 5mg 60 Tab",
+   "price": 63.74,
+   "recordId": "1258b07bbe08e9bee6-1",
+   "catalogueBrand": "Eliquis 5",
+   "cataloguePack": "60"
+  },
+  {
+   "item": 8,
+   "brand": "Pradaxa",
+   "strength": "75 mg",
+   "pack": "Pradaxa 75mg 60 Tab",
+   "price": 41.81,
+   "recordId": "fc0de2aeb9c6d3e1d8-1",
+   "catalogueBrand": "Pradaxa",
+   "cataloguePack": "60 Caps"
+  },
+  {
+   "item": 9,
+   "brand": "Pradaxa",
+   "strength": "110 mg",
+   "pack": "Pradaxa 110mg 60 Tab",
+   "price": 41.81,
+   "recordId": "46721bf13f4ec64bfb-1",
+   "catalogueBrand": "Pradaxa",
+   "cataloguePack": "60 Cap"
+  },
+  {
+   "item": 10,
+   "brand": "Pradaxa",
+   "strength": "150 mg",
+   "pack": "Pradaxa 110mg 60 Tab",
+   "price": 41.81,
+   "recordId": "baf8aaa8cc02080c83-1",
+   "catalogueBrand": "Pradaxa 150mg",
+   "cataloguePack": "60"
+  },
+  {
+   "item": 11,
+   "brand": "Ozempic pen",
+   "strength": "0.25 mg",
+   "pack": "Ozempic 0.25mg 1 Pen Inj",
+   "price": 91.53,
+   "recordId": "66d6622071c789c726-1",
+   "catalogueBrand": "Ozempic",
+   "cataloguePack": "1 PFP"
+  },
+  {
+   "item": 12,
+   "brand": "Ozempic pen",
+   "strength": "0.5 mg",
+   "pack": "Ozempic 0.5mg 1 Pen Inj",
+   "price": 96.35,
+   "recordId": "a954e25afc64d3d1d5-1",
+   "catalogueBrand": "Ozempic",
+   "cataloguePack": "1 PFP"
+  },
+  {
+   "item": 13,
+   "brand": "Ozempic pen",
+   "strength": "1 mg",
+   "pack": "Ozempic 1mg 1 Pen Inj",
+   "price": 91.53,
+   "recordId": "435b27916a66740523-1",
+   "catalogueBrand": "Ozempic",
+   "cataloguePack": "1 PFP"
+  },
+  {
+   "item": 21,
+   "brand": "Verquvo",
+   "strength": "2.5 mg",
+   "pack": "Verquvo 2.5mg 14 Tab",
+   "price": 53.48,
+   "recordId": "2244388d1b16b52c24-1",
+   "catalogueBrand": "Verquvo Film-coated tablet",
+   "cataloguePack": "14 TAB /1 BOX"
+  },
+  {
+   "item": 22,
+   "brand": "Verquvo",
+   "strength": "5 mg",
+   "pack": "Verquvo 5mg 14 Tab",
+   "price": 53.48,
+   "recordId": "c97cee92368c10a150-1",
+   "catalogueBrand": "Verquvo Film-coated tablet",
+   "cataloguePack": "14 TAB /1 BOX"
+  },
+  {
+   "item": 23,
+   "brand": "Xigduo XR",
+   "strength": "10/1000 mg",
+   "pack": "Xigduo XR 10/1000mg 30 Tab",
+   "price": 28.6,
+   "recordId": "abd67260da5d4d7eb3-1",
+   "catalogueBrand": "Xigduo XR film coated tablets10\\1000",
+   "cataloguePack": "30 TAB /1 BOX"
+  },
+  {
+   "item": 24,
+   "brand": "Kombiglyze XR",
+   "strength": "5/1000 mg",
+   "pack": "Kombiglyze XR 5/1000mg 28 Tab",
+   "price": 27.87,
+   "recordId": "6b1a8cbb41c5528fdd-1",
+   "catalogueBrand": "Kombiglyze XR 5mg/1000mg Extended Release Tab",
+   "cataloguePack": "28"
+  },
+  {
+   "item": 25,
+   "brand": "Micardis",
+   "strength": "80 mg",
+   "pack": "Micardis 80 mg 28 Tab",
+   "price": 8.34,
+   "recordId": "07760fa7135f4edfb2-1",
+   "catalogueBrand": "MICARDIS 80mg Tab.",
+   "cataloguePack": "28"
+  },
+  {
+   "item": 26,
+   "brand": "Prograf",
+   "strength": "1 mg",
+   "pack": "Prograf 1mg 100 Cap",
+   "price": 137.7,
+   "recordId": "2595cc1b932de8c9ea-1",
+   "catalogueBrand": "Prograf 1mg Capsules",
+   "cataloguePack": "100"
+  },
+  {
+   "item": 27,
+   "brand": "Prograf",
+   "strength": "0.5 mg",
+   "pack": "Prograf 0.5mg 100 Tab",
+   "price": 60.43,
+   "recordId": "85e967ebadf7912a55-1",
+   "catalogueBrand": "Prograf 0.5mg Capsules",
+   "cataloguePack": "100 Caps"
+  },
+  {
+   "item": 30,
+   "brand": "Advagraf",
+   "strength": "0.5 mg",
+   "pack": "Advagraf",
+   "price": 101.68,
+   "recordId": "1e4190c5422c0d2344-1",
+   "catalogueBrand": "Advagraf 0.5 mg Cap",
+   "cataloguePack": "100"
+  },
+  {
+   "item": 32,
+   "brand": "Valcyte",
+   "strength": "450 mg",
+   "pack": "Valcyte 450mg 60 Tab",
+   "price": 862.65,
+   "recordId": "f5db631f0a1ff2fe75-1",
+   "catalogueBrand": "Valcyte F.C.Tablet",
+   "cataloguePack": "60"
+  },
+  {
+   "item": 37,
+   "brand": "One-Alpha capsules",
+   "strength": "0.5 mcg",
+   "pack": "30 cap",
+   "price": 8.23,
+   "recordId": "6f7d4980353933a420-1",
+   "catalogueBrand": "One-Alpha caps.",
+   "cataloguePack": "30"
+  },
+  {
+   "item": 38,
+   "brand": "One-Alpha capsules",
+   "strength": "1 mcg",
+   "pack": "100 cap",
+   "price": 34.51,
+   "recordId": "e370839c0710903e61-1",
+   "catalogueBrand": "One-Alpha caps.",
+   "cataloguePack": "100 Cap"
+  },
+  {
+   "item": 40,
+   "brand": "Aranesp syringe",
+   "strength": "30 mcg",
+   "pack": "4 syringe",
+   "price": 188.31,
+   "recordId": "6cd387de0e14aa52ea-1",
+   "catalogueBrand": "Aranesp Solution for injection in pre-filled syringe",
+   "cataloguePack": "4PFS"
+  },
+  {
+   "item": 41,
+   "brand": "Aranesp syringe",
+   "strength": "40 mcg",
+   "pack": "4 syringe",
+   "price": 259.8,
+   "recordId": "f590bc5b5dc3f643ab-1",
+   "catalogueBrand": "Aranesp Solution for injection in pre-filled syringe",
+   "cataloguePack": "4PFS"
+  },
+  {
+   "item": 42,
+   "brand": "Aranesp syringe",
+   "strength": "60 mcg",
+   "pack": "4 syringe",
+   "price": 383.81,
+   "recordId": "79391123777fac2fba-1",
+   "catalogueBrand": "Aranesp Solution for injection in pre-filled syringe",
+   "cataloguePack": "4PFS"
+  },
+  {
+   "item": 44,
+   "brand": "Eprex syringe",
+   "strength": "4000 IU",
+   "pack": "6 syringe",
+   "price": 108.4,
+   "recordId": "f0a0f2ffa80ca3f643-1",
+   "catalogueBrand": "Eprex PFS",
+   "cataloguePack": "6 PFS X 0.4ml"
+  },
+  {
+   "item": 48,
+   "brand": "Prolia",
+   "strength": "60 mg",
+   "pack": "Prolia 60mg Pre Filled Syringe",
+   "price": 194.41,
+   "recordId": "c05bd07ceb3da62673-1",
+   "catalogueBrand": "Prolia 60mg/ml",
+   "cataloguePack": "1pfs"
+  },
+  {
+   "item": 49,
+   "brand": "Repatha",
+   "strength": "140 mg",
+   "pack": "Repatha 140mg 2 Pen Inj",
+   "price": 329.0,
+   "recordId": "a5408c8b37397dc259-1",
+   "catalogueBrand": "Repatha 140 mg/ml",
+   "cataloguePack": "2 PFP"
+  },
+  {
+   "item": 50,
+   "brand": "NovoRapid",
+   "strength": "100 IU/ml",
+   "pack": "Novorapid 10ml Inj Vial",
+   "price": 17.66,
+   "recordId": "3148c92cf5d6d9e697-1",
+   "catalogueBrand": "NovoRapid 100IU/ml Solution for Injection vial",
+   "cataloguePack": "1 X 10ml Vial"
+  },
+  {
+   "item": "exforge",
+   "brand": "Exforge",
+   "strength": "80/5",
+   "pack": "28 tab",
+   "price": 12.28,
+   "recordId": "58bcb3796466417b6f-1",
+   "catalogueBrand": "Exforge",
+   "cataloguePack": "28"
+  }
+ ]
+}
