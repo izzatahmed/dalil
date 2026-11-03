@@ -2,7 +2,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
 (async()=>{
  const moduleURL=source=>'data:text/javascript;base64,'+Buffer.from(source).toString('base64');
  const coreURL=moduleURL(fs.readFileSync('core.js','utf8')),c=await import(coreURL);
- const s=await import(moduleURL(fs.readFileSync('search.js','utf8').replace('./core.js?v=0.12.0',coreURL)));
+ const s=await import(moduleURL(fs.readFileSync('search.js','utf8').replace('./core.js?v=0.13.0',coreURL)));
  const catalogue=JSON.parse(fs.readFileSync('catalogue.json')),prices=JSON.parse(fs.readFileSync('prices.json'));
  const groups=c.groupRecords(catalogue.records);for(const g of groups)g.search=c.searchKey(g.rows.map(r=>Object.values(r).join(' ')).join(' '));
  const index=s.makeSearchIndex(groups),p=new Map(prices.entries.map(p=>[p.recordId,p]));
@@ -62,7 +62,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
  console.log('PASS: Arabic/English parity for Famotidine (17 presentations/35 packs), Famodar (4/9), diacritics, tatweel, digit scripts, units, Arabic suggestions and conservative phonetic examples.');
  const src=fs.readFileSync('app.js','utf8'),context=vm.createContext({});vm.runInContext(src.slice(src.indexOf('const L='),src.indexOf('const forms='))+';this.L=L;',context);
  const ar=Object.keys(context.L.ar),en=Object.keys(context.L.en);assert.deepEqual(ar.filter(k=>!en.includes(k)),[]);assert.deepEqual(en.filter(k=>!ar.includes(k)),[]);
- assert.equal(groups.flatMap(g=>g.rows).length,10628);assert.equal(p.size,5175);
+ assert.equal(groups.flatMap(g=>g.rows).length,10628);assert.equal(p.size,5204);
  console.log('PASS: historical price guards, release/route exclusions, same-size priority, bilingual suggestions, typo/strength safeguards, source row preservation and '+ar.length+' translation pairs.');
  const rr=JSON.parse(fs.readFileSync('renalrounds.json'));assert.equal(rr.base,'https://izzatahmed.github.io/drugs/#drug=');assert.equal(rr.catalogueSha256,catalogue.meta.sha256);
  const byRecord=new Map(catalogue.records.map(r=>[r.id,r]));const rrIds=Object.keys(rr.records);assert(rrIds.length>5000);
@@ -94,4 +94,10 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
  console.log('PASS: '+Object.keys(bcs.codes).length+' barcodes for '+bcs.meta.records+' packs; barcode and contains search; '+(100*(1-otherShare)).toFixed(1)+'% of rows in a dosage-form group.');
  assert(src.includes('function setupVoice()')&&src.includes("rec.lang=lang==='ar'?'ar-JO':'en-US'")&&/id="voiceButton"[^>]*hidden/.test(fs.readFileSync('index.html','utf8')));
  console.log('PASS: voice search wiring (Arabic/English, hidden without browser support).');
+ const dc=prices.entries.filter(x=>x.sourceId==='drugcenter-2026-11-03');assert.equal(dc.length,32);assert(prices.meta.sources.find(x=>x.id==='drugcenter-2026-11-03').recent);
+ const ent=catalogue.records.find(r=>r.brand==='Kerendia film-coated tablet'&&/10 MG/.test(r.strength));assert.equal(p.get(ent.id).fils,54280);assert.equal(p.get(ent.id).sourceId,'drugcenter-2026-11-03');
+ const pg=catalogue.records.find(r=>r.brand==='Prograf 0.5mg Capsules');assert.equal(p.get(pg.id).fils,60430,'2026 price replaces the 2020 price');
+ assert.deepEqual(bcs.codes['6251605002546']||JSON.parse(fs.readFileSync('barcodes.json')).codes['6251605002546'],['66d6622071c789c726-1']);
+ assert(src.includes('function rrIds(g)')&&src.includes('rr-badge')&&src.includes("jfdaLoginNote")&&src.indexOf('${rrLinks(g)}<div class="medicine-share">')>0);
+ console.log('PASS: 32 pharmacy prices (3 Nov 2026) shown as recent prices; RenalRounds link at the top of details and a kidney badge on results.');
 })().catch(e=>{console.error(e);process.exitCode=1;});
