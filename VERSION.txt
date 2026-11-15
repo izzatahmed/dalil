@@ -1,6 +1,6 @@
 دليل الادوية الاردني
 The Jordanian Drugs Directory
-v0.13.0
-Release: 2026-11-03
-Recent prices (Nov 2026) for 32 key packs; kidney badge and RenalRounds link at the top of details; JFDA sign-in note.
-Catalogue: 10,628 original JFDA rows; 5,204 packs with a dated price (2020, 2023 or 2026).
+v0.14.0
+Release: 2026-11-15
+Recent prices from the Drug Center list of 15 Nov 2026 for 2,094 packs (648 priced for the first time).
+Catalogue: 10,628 original JFDA rows; 5,852 packs with a dated price (2020, 2023 or 2026).

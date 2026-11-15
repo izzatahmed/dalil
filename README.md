@@ -1,13 +1,20 @@
 # دليل الادوية الاردني
 # The Jordanian Drugs Directory
 
-Version **0.13.0**, 3 November 2026. A mobile-first Arabic/English static directory for GitHub Pages. It is an independent directory using JFDA source data.
+Version **0.14.0**, 15 November 2026. A mobile-first Arabic/English static directory for GitHub Pages. It is an independent directory using JFDA source data.
 
 ## Upload the update
 
 Extract the modified-files ZIP and upload **all its contents** into the existing `dalil` publishing directory, replacing matching files. **Include the updated `app.js` and `search.js` together.** Keep the existing `catalogue.json`, `prices.json`, manifests and icons alongside `index.html`. The complete ZIP includes the full website and preserves pre-existing repository files.
 
 No build, account, API key or server is required. Keep the files at the ZIP root rather than creating a second nested `dalil` folder. GitHub Pages should publish the same directory as before. The versioned service worker refreshes the app assets; reload after deployment if an older version remains visible.
+
+## Drug Center price list in v0.14
+
+- The Drug Center pharmacy website price list exported on 15 November 2026 (3,390 products) was imported with `scripts/import_drugcenter_prices_2026_11_15.py`. 2,094 products matched exactly one catalogue pack by brand, every strength number, pack count or volume, and form; 648 of these packs had no price before. Products that are not registered medicines in the catalogue (cosmetics, devices, supplements) match nothing and are ignored. 
+- Matches were held back when the price differed from the pack's earlier price by more than three times, when the pack size could not be confirmed, or when two different products fell on one pack. Where an earlier price existed, the median ratio of new to earlier price was 1.00. Every product's outcome is listed in `docs/PRICES_DRUGCENTER_2026-11-15.json`.
+- The export describes these as retailer website listed prices, not independently verified official JFDA prices; the site says so. They are shown as "Recent price · 2026-11", and comparisons and lower-price options rank only prices from the same list.
+- 5,852 packs now carry a dated price.
 
 ## Recent prices and clearer kidney links in v0.13
 
