@@ -2,7 +2,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
 (async()=>{
  const moduleURL=source=>'data:text/javascript;base64,'+Buffer.from(source).toString('base64');
  const coreURL=moduleURL(fs.readFileSync('core.js','utf8')),c=await import(coreURL);
- const s=await import(moduleURL(fs.readFileSync('search.js','utf8').replace('./core.js?v=0.13.0',coreURL)));
+ const s=await import(moduleURL(fs.readFileSync('search.js','utf8').replace('./core.js?v=0.14.0',coreURL)));
  const catalogue=JSON.parse(fs.readFileSync('catalogue.json')),prices=JSON.parse(fs.readFileSync('prices.json'));
  const groups=c.groupRecords(catalogue.records);for(const g of groups)g.search=c.searchKey(g.rows.map(r=>Object.values(r).join(' ')).join(' '));
  const index=s.makeSearchIndex(groups),p=new Map(prices.entries.map(p=>[p.recordId,p]));
@@ -10,7 +10,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
  const dg=catalogue.records.find(r=>r.brand==='Diaphage 500 F.CTablets'&&r.pack==='50');assert(dg);
  const options=c.lowerPriceOptions(g,catalogue.records,p);assert(options.length);assert.equal(c.countUnits(options[0].record).count,50);
  assert(options.every(x=>c.alternativeKey(x.record)===c.alternativeKey(g)&&x.savingPercent>0&&x.price.sourceId===p.get(g.id).sourceId));
- const pair=c.compareRecordedPrices([{record:g,price:p.get(g.id)},{record:dg,price:p.get(dg.id)}]);assert.equal(pair.basis,'unit');assert(Math.abs(pair.values[1].savingPercent-20.25862)<0.0001);
+ const pair=c.compareRecordedPrices([{record:g,price:p.get(g.id)},{record:dg,price:p.get(dg.id)}]);assert.equal(pair.basis,'unit');assert(Math.abs(pair.values[1].savingPercent-(1-1850/2370)*100)<0.0001,"Glucophage vs Diaphage, both Drug Center 15 Nov 2026");
  assert.notEqual(c.alternativeKey({...g,brand:'GLUCOPHAGE XR 500MG'}),c.alternativeKey(g));
  assert.notEqual(c.alternativeKey({...g,brand:'GLUCOPHAGE nasal 500MG'}),c.alternativeKey(g));
  assert.notEqual(c.alternativeKey({...g,strength:'850 mg'}),c.alternativeKey(g));
@@ -62,7 +62,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
  console.log('PASS: Arabic/English parity for Famotidine (17 presentations/35 packs), Famodar (4/9), diacritics, tatweel, digit scripts, units, Arabic suggestions and conservative phonetic examples.');
  const src=fs.readFileSync('app.js','utf8'),context=vm.createContext({});vm.runInContext(src.slice(src.indexOf('const L='),src.indexOf('const forms='))+';this.L=L;',context);
  const ar=Object.keys(context.L.ar),en=Object.keys(context.L.en);assert.deepEqual(ar.filter(k=>!en.includes(k)),[]);assert.deepEqual(en.filter(k=>!ar.includes(k)),[]);
- assert.equal(groups.flatMap(g=>g.rows).length,10628);assert.equal(p.size,5204);
+ assert.equal(groups.flatMap(g=>g.rows).length,10628);assert.equal(p.size,5852);
  console.log('PASS: historical price guards, release/route exclusions, same-size priority, bilingual suggestions, typo/strength safeguards, source row preservation and '+ar.length+' translation pairs.');
  const rr=JSON.parse(fs.readFileSync('renalrounds.json'));assert.equal(rr.base,'https://izzatahmed.github.io/drugs/#drug=');assert.equal(rr.catalogueSha256,catalogue.meta.sha256);
  const byRecord=new Map(catalogue.records.map(r=>[r.id,r]));const rrIds=Object.keys(rr.records);assert(rrIds.length>5000);
@@ -78,8 +78,8 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
  const pl=JSON.parse(fs.readFileSync('docs/PRICE_LIST_2023-07.json')),src23=prices.meta.sources.find(x=>x.id==='jfda-2023-07-reduced');assert(src23&&src23.period==='2023-07');
  assert.equal(pl.items.length,374);const e23=prices.entries.filter(x=>x.sourceId==='jfda-2023-07-reduced');assert.equal(e23.length,328);assert.equal(new Set(e23.map(x=>x.recordId)).size,328);
  for(const x of e23){const it=pl.items.find(i=>i.n===x.sourceItem);assert(it&&it.recordId===x.recordId&&it.fils===x.fils&&x.fils<x.previousFils,x.sourceItem);}
- assert.equal(p.get(e23[0].recordId).sourceId,'jfda-2023-07-reduced','2023 price is the one shown');
- const azarten=catalogue.records.find(r=>r.brand==='Azarten FC Tab'&&r.pack==='14');assert.equal(p.get(azarten.id).fils,2370);
+ const lastBy=new Map(prices.entries.map(x=>[x.recordId,x]));for(const [id,x] of lastBy)assert.equal(p.get(id),x,'the newest entry is the one shown');assert(e23.some(x=>p.get(x.recordId)===x),'some 2023 prices still shown');
+ const azarten=catalogue.records.find(r=>r.brand==='Azarten FC Tab'&&r.pack==='14');assert(prices.entries.some(x=>x.recordId===azarten.id&&x.sourceId==='jfda-2023-07-reduced'&&x.fils===2370));
  console.log('PASS: JFDA reduced-price list (July 2023): 374 items, 328 matched to catalogue packs; 2023 price shown over the 2020 price.');
  const bcs=JSON.parse(fs.readFileSync('barcodes.json'));assert.equal(bcs.meta.catalogueSha256,catalogue.meta.sha256);assert(Object.keys(bcs.codes).length>3500);
  for(const [code,ids] of Object.entries(bcs.codes)){assert(/^\d{8,14}$/.test(code),code);for(const id of ids)assert(byRecord.has(id),id);}
@@ -95,9 +95,15 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
  assert(src.includes('function setupVoice()')&&src.includes("rec.lang=lang==='ar'?'ar-JO':'en-US'")&&/id="voiceButton"[^>]*hidden/.test(fs.readFileSync('index.html','utf8')));
  console.log('PASS: voice search wiring (Arabic/English, hidden without browser support).');
  const dc=prices.entries.filter(x=>x.sourceId==='drugcenter-2026-11-03');assert.equal(dc.length,32);assert(prices.meta.sources.find(x=>x.id==='drugcenter-2026-11-03').recent);
- const ent=catalogue.records.find(r=>r.brand==='Kerendia film-coated tablet'&&/10 MG/.test(r.strength));assert.equal(p.get(ent.id).fils,54280);assert.equal(p.get(ent.id).sourceId,'drugcenter-2026-11-03');
- const pg=catalogue.records.find(r=>r.brand==='Prograf 0.5mg Capsules');assert.equal(p.get(pg.id).fils,60430,'2026 price replaces the 2020 price');
+ const ent=catalogue.records.find(r=>r.brand==='Kerendia film-coated tablet'&&/10 MG/.test(r.strength));assert(prices.entries.some(x=>x.recordId===ent.id&&x.sourceId==='drugcenter-2026-11-03'&&x.fils===54280));
+ const pg=catalogue.records.find(r=>r.brand==='Prograf 0.5mg Capsules');assert(prices.entries.some(x=>x.recordId===pg.id&&x.sourceId==='drugcenter-2026-11-03'&&x.fils===60430));assert.notEqual(p.get(pg.id).sourceId,'jfda-2020-12','a 2026 price replaces the 2020 price');
  assert.deepEqual(bcs.codes['6251605002546']||JSON.parse(fs.readFileSync('barcodes.json')).codes['6251605002546'],['66d6622071c789c726-1']);
  assert(src.includes('function rrIds(g)')&&src.includes('rr-badge')&&src.includes("jfdaLoginNote")&&src.indexOf('${rrLinks(g)}<div class="medicine-share">')>0);
  console.log('PASS: 32 pharmacy prices (3 Nov 2026) shown as recent prices; RenalRounds link at the top of details and a kidney badge on results.');
+ const d15=prices.entries.filter(x=>x.sourceId==='drugcenter-2026-11-15');assert.equal(d15.length,2094);assert.equal(new Set(d15.map(x=>x.recordId)).size,2094);
+ const src15=prices.meta.sources.find(x=>x.id==='drugcenter-2026-11-15');assert(src15.recent&&/not independently verified/.test(src15.dateBasis));
+ const audit=JSON.parse(fs.readFileSync('docs/PRICES_DRUGCENTER_2026-11-15.json'));assert.equal(audit.products.length,3390);assert.equal(audit.products.filter(x=>x.status==='matched').length,2094);
+ for(const x of d15){const r=byRecord.get(x.recordId);assert(r,x.recordId);}
+ const vat=d15.find(x=>x.sourceBrand==='Vatril 24/26mg 60 Tab');assert(vat&&vat.fils===66830&&/^Vatril/i.test(byRecord.get(vat.recordId).brand)&&p.get(vat.recordId)===vat);
+ console.log('PASS: Drug Center list of 15 Nov 2026: 2,094 of 3,390 products matched to catalogue packs (648 priced for the first time); cosmetics and unregistered items ignored.');
 })().catch(e=>{console.error(e);process.exitCode=1;});
