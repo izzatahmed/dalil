@@ -2,7 +2,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
 (async()=>{
  const moduleURL=source=>'data:text/javascript;base64,'+Buffer.from(source).toString('base64');
  const coreURL=moduleURL(fs.readFileSync('core.js','utf8')),c=await import(coreURL);
- const s=await import(moduleURL(fs.readFileSync('search.js','utf8').replace('./core.js?v=0.14.0',coreURL)));
+ const s=await import(moduleURL(fs.readFileSync('search.js','utf8').replace('./core.js?v=0.15.0',coreURL)));
  const catalogue=JSON.parse(fs.readFileSync('catalogue.json')),prices=JSON.parse(fs.readFileSync('prices.json'));
  const groups=c.groupRecords(catalogue.records);for(const g of groups)g.search=c.searchKey(g.rows.map(r=>Object.values(r).join(' ')).join(' '));
  const index=s.makeSearchIndex(groups),p=new Map(prices.entries.map(p=>[p.recordId,p]));
@@ -62,7 +62,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
  console.log('PASS: Arabic/English parity for Famotidine (17 presentations/35 packs), Famodar (4/9), diacritics, tatweel, digit scripts, units, Arabic suggestions and conservative phonetic examples.');
  const src=fs.readFileSync('app.js','utf8'),context=vm.createContext({});vm.runInContext(src.slice(src.indexOf('const L='),src.indexOf('const forms='))+';this.L=L;',context);
  const ar=Object.keys(context.L.ar),en=Object.keys(context.L.en);assert.deepEqual(ar.filter(k=>!en.includes(k)),[]);assert.deepEqual(en.filter(k=>!ar.includes(k)),[]);
- assert.equal(groups.flatMap(g=>g.rows).length,10628);assert.equal(p.size,5852);
+ assert.equal(groups.flatMap(g=>g.rows).length,10628);assert.equal(p.size,7169);
  console.log('PASS: historical price guards, release/route exclusions, same-size priority, bilingual suggestions, typo/strength safeguards, source row preservation and '+ar.length+' translation pairs.');
  const rr=JSON.parse(fs.readFileSync('renalrounds.json'));assert.equal(rr.base,'https://izzatahmed.github.io/drugs/#drug=');assert.equal(rr.catalogueSha256,catalogue.meta.sha256);
  const byRecord=new Map(catalogue.records.map(r=>[r.id,r]));const rrIds=Object.keys(rr.records);assert(rrIds.length>5000);
@@ -104,6 +104,14 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
  const src15=prices.meta.sources.find(x=>x.id==='drugcenter-2026-11-15');assert(src15.recent&&/not independently verified/.test(src15.dateBasis));
  const audit=JSON.parse(fs.readFileSync('docs/PRICES_DRUGCENTER_2026-11-15.json'));assert.equal(audit.products.length,3390);assert.equal(audit.products.filter(x=>x.status==='matched').length,2094);
  for(const x of d15){const r=byRecord.get(x.recordId);assert(r,x.recordId);}
- const vat=d15.find(x=>x.sourceBrand==='Vatril 24/26mg 60 Tab');assert(vat&&vat.fils===66830&&/^Vatril/i.test(byRecord.get(vat.recordId).brand)&&p.get(vat.recordId)===vat);
+ const vat=d15.find(x=>x.sourceBrand==='Vatril 24/26mg 60 Tab');assert(vat&&vat.fils===66830&&/^Vatril/i.test(byRecord.get(vat.recordId).brand));
  console.log('PASS: Drug Center list of 15 Nov 2026: 2,094 of 3,390 products matched to catalogue packs (648 priced for the first time); cosmetics and unregistered items ignored.');
+ const jf=prices.entries.filter(x=>x.sourceId==='jfda-search-2026-11-17');assert.equal(jf.length,6902);assert.equal(new Set(jf.map(x=>x.recordId)).size,6902);
+ const sj=prices.meta.sources.find(x=>x.id==='jfda-search-2026-11-17');assert(sj.official&&sj.recent&&/zero/.test(sj.dateBasis));assert.equal(prices.meta.sources.at(-1).id,'jfda-search-2026-11-17','JFDA last, so it is shown');
+ for(const x of jf){assert(byRecord.has(x.recordId));assert(x.fils>0);if(x.effectiveDate)assert(x.effectiveDate<='2026-11-17');}
+ const k10=catalogue.records.find(r=>r.brand==='Kerendia film-coated tablet'&&/10 MG/.test(r.strength));assert.equal(p.get(k10.id).sourceId,'jfda-search-2026-11-17');assert.equal(p.get(k10.id).fils,54280);assert.equal(p.get(k10.id).effectiveDate,'2025-02-24');
+ const pr150=catalogue.records.find(r=>r.brand==='Pradaxa 150mg');assert.equal(p.get(pr150.id).fils,67090);
+ const bj=JSON.parse(fs.readFileSync('barcodes.json'));assert(bj.meta.records>5300);assert.deepEqual(bj.codes['4054839506253'],['2f3d3b88f2f502f500-1'],'Glucophage 500 barcode from JFDA');
+ assert(src.includes("officialPrice:'سعر المؤسسة'")&&src.includes('function sourceOfficial(p)'));
+ console.log('PASS: JFDA public search (17 Nov 2026): 6,902 exact-matched JFDA prices shown first; barcodes for '+bj.meta.records+' packs.');
 })().catch(e=>{console.error(e);process.exitCode=1;});
