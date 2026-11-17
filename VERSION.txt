@@ -1,6 +1,6 @@
 دليل الادوية الاردني
 The Jordanian Drugs Directory
-v0.14.0
-Release: 2026-11-15
-Recent prices from the Drug Center list of 15 Nov 2026 for 2,094 packs (648 priced for the first time).
-Catalogue: 10,628 original JFDA rows; 5,852 packs with a dated price (2020, 2023 or 2026).
+v0.15.0
+Release: 2026-11-17
+JFDA public-search prices (17 Nov 2026) for 6,902 packs, shown first; JFDA barcodes: 5,383 packs scannable.
+Catalogue: 10,628 original JFDA rows; 7,169 packs with a dated price.

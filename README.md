@@ -1,13 +1,21 @@
 # دليل الادوية الاردني
 # The Jordanian Drugs Directory
 
-Version **0.14.0**, 15 November 2026. A mobile-first Arabic/English static directory for GitHub Pages. It is an independent directory using JFDA source data.
+Version **0.15.0**, 17 November 2026. A mobile-first Arabic/English static directory for GitHub Pages. It is an independent directory using JFDA source data.
 
 ## Upload the update
 
 Extract the modified-files ZIP and upload **all its contents** into the existing `dalil` publishing directory, replacing matching files. **Include the updated `app.js` and `search.js` together.** Keep the existing `catalogue.json`, `prices.json`, manifests and icons alongside `index.html`. The complete ZIP includes the full website and preserves pre-existing repository files.
 
 No build, account, API key or server is required. Keep the files at the ZIP root rather than creating a second nested `dalil` folder. GitHub Pages should publish the same directory as before. The versioned service worker refreshes the app assets; reload after deployment if an older version remains visible.
+
+## JFDA prices and barcodes in v0.15
+
+- `JFDA_audited_records.json` (JFDA public drug search, 676 queries, collected 17 November 2026; 18,154 records; completeness not verified) was imported with `scripts/import_jfda_2026_11_17.py`.
+- Matching is exact: normalised trade name + strength + pack + manufacturer (6,774 rows), or trade name + strength + pack when that alone is unique (2,980 rows). 9,753 of the 10,628 catalogue rows matched. JFDA records that match nothing (8,393) are mostly non-medicines or products registered after the June 2026 catalogue; they are not added.
+- **Prices:** 6,902 packs have a positive JFDA public price including tax; 1,317 of them had no price before. Listed zeros (8,109 records) and missing prices are not used. JFDA prices are labelled "JFDA price · 2026-11", are shown in preference to the Drug Center and older prices, and agree exactly with Drug Center for 92% of the packs priced by both. Where JFDA gives a price-active date no later than the collection date (2,122 packs), it appears when the label is hovered or long-pressed.
+- **Barcodes:** valid-check-digit JFDA barcodes were added; 5,383 packs can now be found by scanning (3,858 before).
+- `docs/JFDA_SEARCH_2026-11-17.json` lists every match (catalogue row ↔ JFDA record number).
 
 ## Drug Center price list in v0.14
 
