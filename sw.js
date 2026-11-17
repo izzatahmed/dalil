@@ -1,6 +1,6 @@
 'use strict';
-const PREFIX='jma:'+self.registration.scope+':',CACHE=PREFIX+'v0.15.0';
-const FILES=['./','./index.html','./styles.css?v=0.15.0','./app.js?v=0.15.0','./core.js?v=0.15.0','./search.js?v=0.15.0','./catalogue.json','./prices.json','./renalrounds.json','./barcodes.json','./manifest.webmanifest?v=0.15.0','./manifest.en.webmanifest?v=0.15.0','./icon.svg?v=0.15.0','./icon-192.png?v=0.15.0','./icon-512.png?v=0.15.0'];
+const PREFIX='jma:'+self.registration.scope+':',CACHE=PREFIX+'v0.17.0';
+const FILES=['./','./index.html','./styles.css?v=0.17.0','./app.js?v=0.17.0','./core.js?v=0.17.0','./search.js?v=0.17.0','./catalogue.json','./prices.json','./renalrounds.json','./barcodes.json','./catalogue_additions.json','./leaflets.json','./manifest.webmanifest?v=0.17.0','./manifest.en.webmanifest?v=0.17.0','./icon.svg?v=0.17.0','./icon-192.png?v=0.17.0','./icon-512.png?v=0.17.0'];
 const paths=new Set(FILES.map(f=>new URL(f,self.registration.scope).pathname));
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith(PREFIX)&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

@@ -1,13 +1,25 @@
 # دليل الادوية الاردني
 # The Jordanian Drugs Directory
 
-Version **0.15.0**, 17 November 2026. A mobile-first Arabic/English static directory for GitHub Pages. It is an independent directory using JFDA source data.
+Version **0.17.0**, 17 November 2026. A mobile-first Arabic/English static directory for GitHub Pages. It is an independent directory using JFDA source data.
 
 ## Upload the update
 
 Extract the modified-files ZIP and upload **all its contents** into the existing `dalil` publishing directory, replacing matching files. **Include the updated `app.js` and `search.js` together.** Keep the existing `catalogue.json`, `prices.json`, manifests and icons alongside `index.html`. The complete ZIP includes the full website and preserves pre-existing repository files.
 
 No build, account, API key or server is required. Keep the files at the ZIP root rather than creating a second nested `dalil` folder. GitHub Pages should publish the same directory as before. The versioned service worker refreshes the app assets; reload after deployment if an older version remains visible.
+
+## Direct leaflet links in v0.17
+
+- Product details now open the JFDA-approved leaflet PDF directly (`https://drugapplication.jfda.jo/PRep/DisplayF?fil=<file>`), for 7,609 packs. File names come from the JFDA public search of 17 November 2026 (`leaflets.json`, written by `scripts/import_jfda_2026_11_17.py`); the link pattern was confirmed with Empaxa 25 mg (4257495.pdf). Only `.pdf` names are linked. When a medicine's packs have different leaflets, each is listed with its strength and pack.
+
+## New products and better JFDA matching in v0.16
+
+- **Better matching.** A third pass compares only the numbers in the strength (JFDA often writes "Apixaban 5 MG" where the workbook has "5MG"), with the same trade name and pack. It matched 328 more catalogue rows; JFDA prices now cover 7,048 workbook rows.
+- **175 new products** (`catalogue_additions.json`): JFDA records with a positive public price that match no workbook row and duplicate none (same name, strength numbers and pack numbers), with an ATC code or listed ingredients. Many are new generics (sacubitril/valsartan, apixaban, rivaroxaban, dapagliflozin and empagliflozin combinations). The dosage form is inferred from the name and pack (blank when unclear), the agent is shown in English where known, and each product says it was added from the JFDA search. `catalogue.json` itself is unchanged.
+- `scripts/import_jfda_2026_11_17.py` produces the prices, barcodes and additions in one idempotent run.
+- **RenalRounds links** were regenerated over workbook + additions (6,951 rows linked). Products written as one ingredient text ("Sacubitril Valsartan 200 (…)") now link to RenalRounds' sacubitril/valsartan entry as well as valsartan.
+- 7,468 packs have a dated price; 5,410 can be found by barcode.
 
 ## JFDA prices and barcodes in v0.15
 
