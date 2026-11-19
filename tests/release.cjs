@@ -2,7 +2,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
 (async()=>{
  const moduleURL=source=>'data:text/javascript;base64,'+Buffer.from(source).toString('base64');
  const coreURL=moduleURL(fs.readFileSync('core.js','utf8')),c=await import(coreURL);
- const s=await import(moduleURL(fs.readFileSync('search.js','utf8').replace('./core.js?v=0.17.0',coreURL)));
+ const s=await import(moduleURL(fs.readFileSync('search.js','utf8').replace('./core.js?v=0.18.0',coreURL)));
  const catalogue=JSON.parse(fs.readFileSync('catalogue.json')),prices=JSON.parse(fs.readFileSync('prices.json'));
  const groups=c.groupRecords(catalogue.records);for(const g of groups)g.search=c.searchKey(g.rows.map(r=>Object.values(r).join(' ')).join(' '));
  const index=s.makeSearchIndex(groups),p=new Map(prices.entries.map(p=>[p.recordId,p]));
@@ -122,4 +122,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('nod
  const emp=catalogue.records.concat(additions.records).find(r=>r.brand==='Empaxa'&&/25 MG/.test(r.strength)&&/^30 TAB/.test(r.pack));assert(emp,'Empaxa 25 mg 30 tab in Dalil');assert.deepEqual(lf.records[emp.id],['4257495.pdf'],'leaflet confirmed by the editor');
  assert(src.includes('function leafletLinks(g)')&&fs.readFileSync('sw.js','utf8').includes("'./leaflets.json'"));
  console.log('PASS: direct JFDA leaflet PDFs for '+Object.keys(lf.records).length+' packs (Empaxa 25 mg → 4257495.pdf).');
+ const css=fs.readFileSync('styles.css','utf8');assert(/body\.dark,:root\[data-theme="dark"\]\{--on-green:#0b2420\}/.test(css)&&css.includes('.medicine-links .leaflet-link,.rr-badge,.scan-form button{color:var(--on-green)!important}'),'dark text on light green in dark mode');
+ assert(src.includes("rr.base.replace(/#drug=$/,'med-review.html')+'#add='")&&(src.match(/rrReview:/g)||[]).length===2,'kidney medication review link');
+ console.log('PASS: v0.18 high-contrast green buttons in dark mode; kidney medication review link.');
 })().catch(e=>{console.error(e);process.exitCode=1;});
