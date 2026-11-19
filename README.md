@@ -1,13 +1,18 @@
 # دليل الادوية الاردني
 # The Jordanian Drugs Directory
 
-Version **0.17.0**, 17 November 2026. A mobile-first Arabic/English static directory for GitHub Pages. It is an independent directory using JFDA source data.
+Version **0.18.0**, 19 November 2026. A mobile-first Arabic/English static directory for GitHub Pages. It is an independent directory using JFDA source data.
 
 ## Upload the update
 
 Extract the modified-files ZIP and upload **all its contents** into the existing `dalil` publishing directory, replacing matching files. **Include the updated `app.js` and `search.js` together.** Keep the existing `catalogue.json`, `prices.json`, manifests and icons alongside `index.html`. The complete ZIP includes the full website and preserves pre-existing repository files.
 
 No build, account, API key or server is required. Keep the files at the ZIP root rather than creating a second nested `dalil` folder. GitHub Pages should publish the same directory as before. The versioned service worker refreshes the app assets; reload after deployment if an older version remains visible.
+
+## Clearer buttons and the kidney medication review in v0.18
+
+- In the dark appearance, the leaflet button, the "Kidney" badge and the barcode Find button had white text on light green (contrast 1.6:1). They now use dark text on that green (9.9:1); the light appearance is unchanged (7.7:1).
+- Medicines linked to RenalRounds have a **Kidney medication review** link that opens RenalRounds' review page with the medicine already added, so its renal guidance, interactions with the patient's other medicines and prices can be seen together.
 
 ## Direct leaflet links in v0.17
 

@@ -1,6 +1,6 @@
 دليل الادوية الاردني
 The Jordanian Drugs Directory
-v0.17.0
-Release: 2026-11-17
-Direct links to the JFDA-approved leaflet PDF for 7,609 packs; 175 new products; 7,223 JFDA prices; 5,410 packs scannable.
+v0.18.0
+Release: 2026-11-19
+Higher-contrast leaflet button, Kidney badge and Find button in the dark appearance; Kidney medication review link from medicines linked to RenalRounds.
 Catalogue: 10,628 JFDA workbook rows + 175 additions; 7,468 packs with a dated price.
